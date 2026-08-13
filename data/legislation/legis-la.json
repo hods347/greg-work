@@ -1,0 +1,71 @@
+{
+  "jurisdiction": "legis-la",
+  "window_start": "2024-11-01",
+  "window_end": "2026-08-13",
+  "reviewed_date": "2026-08-13",
+  "coverage": {
+    "sources_searched": [
+      "https://revenue.louisiana.gov (news / law changes)",
+      "https://legis.la.gov (2024 Third Extraordinary Session acts)"
+    ],
+    "gaps": [
+      "DEMO DATA: produced without network access. Entries are AI-recalled from Louisiana's December 2024 special-session tax reform and marked unverified; excerpts are illustrative, not verbatim act text. Re-run the legis-la agent in a network-enabled session to verify against legis.la.gov."
+    ]
+  },
+  "laws": [
+    {
+      "id": "la-act-11-flat-cit-rate",
+      "bill": "HB 2, 2024 Third Extraordinary Session (Act 11)",
+      "law_citation": "Act 11 of the 2024 Third Extraordinary Session",
+      "title": "Louisiana adopts flat 5.5% corporate income tax rate with full expensing",
+      "enacted_date": "2024-12-04",
+      "effective": "Tax years beginning on or after January 1, 2025.",
+      "stage": "enacted",
+      "category": "rate-or-threshold",
+      "impact": "high",
+      "status": "unverified",
+      "summary_for_company": "For tax years beginning on or after January 1, 2025, Louisiana replaces its graduated corporate rates (3.5%/5.5%/7.5%) with a flat 5.5% rate and allows permanent full expensing of qualifying capital and research expenditures by election. Update the 2025 CIFT-620 rate computation and state provision rate, and evaluate the state-level bonus/R&E expensing election since it is independent of federal treatment.",
+      "summary_for_firm": "All Louisiana corporate filers move to a flat 5.5% rate for 2025 — top-bracket clients get a cut, small-bracket clients may see an increase, so re-project estimates before Q1 2025 vouchers. The new elective full-expensing regime is a planning conversation for every capex- or R&E-heavy Louisiana client, and multi-state clients need their Louisiana deferred-rate assumptions updated in year-end 2024 provisions.",
+      "affected_returns": ["LA Form CIFT-620"],
+      "related_form_jurisdictions": ["state-la"],
+      "first_return_year_affected": 2025,
+      "source": {
+        "document": "Act 11, 2024 Third Extraordinary Session (HB 2)",
+        "url": "https://legis.la.gov/legis/BillInfo.aspx?s=243ES&b=HB2",
+        "section": "Amending La. R.S. 47:287.12",
+        "page": ""
+      },
+      "excerpt": {
+        "passage": "[ILLUSTRATIVE — verify against enrolled act] Section 1. R.S. 47:287.12 is hereby amended and reenacted to read as follows: §287.12. Rates of tax. The tax to be assessed, levied, collected, and paid upon the Louisiana taxable income of every corporation shall be computed at the rate of five and one-half percent of Louisiana taxable income.",
+        "amended_from": "R.S. 47:287.12 (prior law): 'three and one-half percent upon the first fifty thousand dollars of Louisiana taxable income; five and one-half percent upon the amount above fifty thousand dollars but not in excess of one hundred fifty thousand dollars; seven and one-half percent on the amount above one hundred fifty thousand dollars.'"
+      }
+    },
+    {
+      "id": "la-act-6-franchise-tax-repeal",
+      "bill": "HB 3, 2024 Third Extraordinary Session (Act 6)",
+      "law_citation": "Act 6 of the 2024 Third Extraordinary Session",
+      "title": "Corporation franchise tax repealed for periods beginning on or after January 1, 2026",
+      "enacted_date": "2024-12-04",
+      "effective": "Franchise tax periods beginning on or after January 1, 2026.",
+      "stage": "enacted",
+      "category": "other",
+      "impact": "high",
+      "status": "unverified",
+      "summary_for_company": "The Louisiana corporation franchise tax is repealed for taxable periods beginning on or after January 1, 2026, so the 2025 franchise period (reported on the return filed in 2025) is the last one. Plan for the final CIFT-620 franchise computation, track any unused franchise-tax credits under the transition rules, and remove the franchise accrual from 2026 forecasts.",
+      "summary_for_firm": "Every Louisiana client that pays franchise tax stops accruing it for periods beginning in 2026 — communicate the sunset alongside 2025 planning, confirm final-period filings are correct, and review clients with franchise-tax credit carryforwards for transition treatment. Combined federal/state engagement letters and fee scopes referencing the franchise return should be updated for 2026.",
+      "affected_returns": ["LA Form CIFT-620 (franchise tax portion)"],
+      "related_form_jurisdictions": ["state-la"],
+      "first_return_year_affected": 2026,
+      "source": {
+        "document": "Act 6, 2024 Third Extraordinary Session (HB 3)",
+        "url": "https://legis.la.gov/legis/BillInfo.aspx?s=243ES&b=HB3",
+        "section": "Repealing La. R.S. 47:601 et seq.",
+        "page": ""
+      },
+      "excerpt": {
+        "passage": "[ILLUSTRATIVE — verify against enrolled act] Section 2. R.S. 47:601 through 618 are hereby repealed in their entirety, effective for franchise taxable periods beginning on or after January 1, 2026. No corporation franchise tax shall be levied, assessed, or collected for any taxable period beginning on or after such date.",
+        "amended_from": null
+      }
+    }
+  ]
+}

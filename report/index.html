@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tax Form Changes Tracker</title>
+<style>
+:root {
+  --bg: #f6f5f1;
+  --panel: #ffffff;
+  --ink: #1e2430;
+  --muted: #6b7280;
+  --line: #e3e1d9;
+  --accent: #1f5f4e;
+  --accent-ink: #ffffff;
+  --chip: #eceae2;
+  --chip-on: #1f5f4e;
+  --high: #b4232a;
+  --medium: #b26a00;
+  --low: #4b5563;
+  --unverified-bg: #fdf3d7;
+  --unverified-ink: #7a5a00;
+  --doc-bg: #fbfaf5;
+  --doc-edge: #d9d4c3;
+  --shadow: 0 10px 30px rgba(20, 25, 35, .14);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14181f;
+    --panel: #1c222c;
+    --ink: #e8eaf0;
+    --muted: #9aa3b2;
+    --line: #2b3340;
+    --accent: #4fae92;
+    --accent-ink: #0d1218;
+    --chip: #262d39;
+    --chip-on: #4fae92;
+    --high: #f0716f;
+    --medium: #e0a63f;
+    --low: #9aa3b2;
+    --unverified-bg: #3a3115;
+    --unverified-ink: #ecc85e;
+    --doc-bg: #202733;
+    --doc-edge: #39424f;
+    --shadow: 0 10px 30px rgba(0, 0, 0, .5);
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.55 "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+header {
+  padding: 24px 28px 0; border-bottom: 1px solid var(--line);
+  background: var(--panel);
+}
+header h1 { margin: 0 0 4px; font-size: 21px; letter-spacing: .2px; }
+header .sub { color: var(--muted); font-size: 13.5px; }
+.stats { display: flex; gap: 26px; margin-top: 14px; flex-wrap: wrap; }
+.stat b { font-size: 20px; display: block; }
+.stat span { color: var(--muted); font-size: 12.5px; }
+.tabs { display: flex; gap: 4px; margin-top: 16px; }
+.tab {
+  border: 1px solid var(--line); border-bottom: none; background: var(--chip);
+  color: var(--muted); font: inherit; font-size: 13.5px; font-weight: 600;
+  padding: 9px 18px; border-radius: 9px 9px 0 0; cursor: pointer;
+}
+.tab.on { background: var(--bg); color: var(--ink); }
+.layout { display: grid; grid-template-columns: 275px 1fr; min-height: calc(100vh - 150px); }
+nav {
+  border-right: 1px solid var(--line); background: var(--panel);
+  padding: 14px 10px; overflow-y: auto; max-height: calc(100vh - 150px);
+  position: sticky; top: 0;
+}
+nav h2 { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin: 14px 8px 6px; }
+nav button {
+  display: flex; justify-content: space-between; align-items: center; gap: 8px;
+  width: 100%; text-align: left; border: 0; background: none; color: var(--ink);
+  padding: 6px 9px; border-radius: 7px; cursor: pointer; font: inherit; font-size: 13.5px;
+}
+nav button:hover { background: var(--chip); }
+nav button.on { background: var(--accent); color: var(--accent-ink); }
+nav button .n {
+  font-size: 11.5px; background: var(--chip); color: var(--muted);
+  border-radius: 999px; padding: 0 8px; min-width: 22px; text-align: center;
+}
+nav button.on .n { background: rgba(255,255,255,.25); color: inherit; }
+nav button .n.zero { opacity: .45; }
+main { padding: 20px 26px 60px; max-width: 1060px; }
+.filters {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  padding: 12px 0 16px; position: sticky; top: 0; background: var(--bg); z-index: 5;
+}
+.filters input[type=search] {
+  flex: 1 1 220px; padding: 8px 12px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--panel); color: var(--ink); font: inherit;
+}
+.chip {
+  border: 1px solid var(--line); background: var(--chip); color: var(--ink);
+  border-radius: 999px; padding: 4px 12px; font-size: 12.5px; cursor: pointer;
+}
+.chip.on { background: var(--chip-on); border-color: var(--chip-on); color: var(--accent-ink); }
+.aud {
+  display: inline-flex; border: 1px solid var(--line); border-radius: 999px;
+  overflow: hidden; margin-left: auto;
+}
+.aud button {
+  border: 0; background: var(--panel); color: var(--muted); font: inherit;
+  font-size: 12.5px; font-weight: 600; padding: 5px 14px; cursor: pointer;
+}
+.aud button.on { background: var(--accent); color: var(--accent-ink); }
+.jur-block { margin: 26px 0 8px; }
+.jur-block h3 { margin: 0 0 2px; font-size: 16.5px; }
+.jur-block .meta { color: var(--muted); font-size: 12.5px; margin-bottom: 10px; }
+.jur-block .gap {
+  background: var(--unverified-bg); color: var(--unverified-ink);
+  border-radius: 8px; padding: 8px 12px; font-size: 12.5px; margin: 8px 0;
+}
+.card {
+  background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px; margin: 10px 0; cursor: pointer; transition: box-shadow .15s, transform .15s;
+}
+.card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.card h4 { margin: 0 0 6px; font-size: 15px; }
+.card p { margin: 6px 0 8px; color: var(--ink); font-size: 13.8px; }
+.badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.badge {
+  font-size: 11px; letter-spacing: .03em; border-radius: 5px; padding: 2px 8px;
+  background: var(--chip); color: var(--muted);
+}
+.badge.cat { background: var(--chip); color: var(--ink); }
+.badge.high { color: var(--high); border: 1px solid currentColor; background: transparent; }
+.badge.medium { color: var(--medium); border: 1px solid currentColor; background: transparent; }
+.badge.low { color: var(--low); border: 1px solid currentColor; background: transparent; }
+.badge.unverified { background: var(--unverified-bg); color: var(--unverified-ink); font-weight: 600; }
+.badge.stage { border: 1px dashed var(--muted); background: transparent; }
+.card .hint { color: var(--muted); font-size: 12px; margin-top: 8px; }
+.aud-label { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-top: 8px; }
+.empty { color: var(--muted); padding: 30px 4px; }
+.overlay {
+  position: fixed; inset: 0; background: rgba(10, 14, 20, .55);
+  display: none; align-items: flex-start; justify-content: center;
+  padding: 4vh 16px; z-index: 50; overflow-y: auto;
+}
+.overlay.open { display: flex; }
+.modal {
+  background: var(--panel); border-radius: 14px; max-width: 860px; width: 100%;
+  box-shadow: var(--shadow); padding: 24px 28px 26px; position: relative;
+}
+.modal .close {
+  position: absolute; top: 14px; right: 14px; border: 0; background: var(--chip);
+  color: var(--ink); width: 30px; height: 30px; border-radius: 999px;
+  font-size: 15px; cursor: pointer;
+}
+.modal h3 { margin: 0 34px 8px 0; font-size: 18px; }
+.modal .summary { font-size: 14.5px; margin: 8px 0 12px; }
+.modal .kv { font-size: 13px; color: var(--muted); margin: 3px 0; }
+.modal .kv b { color: var(--ink); font-weight: 600; }
+.doc {
+  background: var(--doc-bg); border: 1px solid var(--doc-edge);
+  border-left: 4px solid var(--accent); border-radius: 8px;
+  padding: 14px 18px; margin: 10px 0 4px;
+  font-family: Georgia, "Times New Roman", serif; font-size: 14.5px; line-height: 1.65;
+  white-space: pre-wrap;
+}
+.doc-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .12em;
+  color: var(--muted); margin-top: 16px;
+}
+.doc.prior { border-left-color: var(--muted); opacity: .92; }
+.cite { font-size: 12.5px; color: var(--muted); margin-top: 14px; }
+.cite a { color: var(--accent); }
+.modal .warn {
+  background: var(--unverified-bg); color: var(--unverified-ink);
+  border-radius: 8px; padding: 8px 12px; font-size: 12.5px; margin-top: 14px;
+}
+footer { padding: 22px 28px; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); }
+@media (max-width: 800px) {
+  .layout { grid-template-columns: 1fr; }
+  nav { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--line); }
+  .aud { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>Tax Form Changes Tracker</h1>
+  <div class="sub" id="subtitle"></div>
+  <div class="stats" id="stats"></div>
+  <div class="tabs">
+    <button class="tab on" data-tab="forms">Form instructions</button>
+    <button class="tab" data-tab="legis">Legislation</button>
+  </div>
+</header>
+<div class="layout">
+  <nav id="nav"></nav>
+  <main>
+    <div class="filters">
+      <input type="search" id="q" placeholder="Search…">
+      <span id="catChips"></span>
+      <span id="impChips"></span>
+      <button class="chip" id="verifiedOnly">verified only</button>
+      <span class="aud" id="audToggle" hidden>
+        <button data-aud="company" class="on">Company view</button>
+        <button data-aud="firm">Firm view</button>
+      </span>
+    </div>
+    <div id="content"></div>
+  </main>
+</div>
+<footer>Generated by scripts/generate_report.py. AI-generated summaries — verify against the cited source documents before relying on any entry. Entries marked UNVERIFIED have not been confirmed against a retrieved source.</footer>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal" role="dialog" aria-modal="true"></div>
+</div>
+
+<script type="application/json" id="data">{"jurisdictions": [{"id": "federal-1120", "name": "Federal — Form 1120", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-5471", "name": "Federal — Form 5471", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-8865", "name": "Federal — Form 8865", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-8858", "name": "Federal — Form 8858", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-1120-pc", "name": "Federal — Form 1120-PC", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-1118", "name": "Federal — Form 1118", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-3800", "name": "Federal — Form 3800", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-8990", "name": "Federal — Form 8990", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-8991", "name": "Federal — Form 8991", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-8992", "name": "Federal — Form 8992", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-8993", "name": "Federal — Form 8993", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-5472", "name": "Federal — Form 5472", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-1120-sch-m3", "name": "Federal — Schedule M-3 (1120)", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-1120-sch-d", "name": "Federal — Schedule D (1120)", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-1120-sch-o", "name": "Federal — Schedule O (1120)", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-1120-sch-ph", "name": "Federal — Schedule PH (1120)", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-1120-sch-utp", "name": "Federal — Schedule UTP (1120)", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-4626", "name": "Federal — Form 4626 (CAMT)", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-4562", "name": "Federal — Form 4562", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-4797", "name": "Federal — Form 4797", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-3115", "name": "Federal — Form 3115", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-2220", "name": "Federal — Form 2220", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-7004", "name": "Federal — Form 7004", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-1125", "name": "Federal — Forms 1125-A / 1125-E", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-8886", "name": "Federal — Form 8886", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-926", "name": "Federal — Form 926", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "federal-8975", "name": "Federal — Form 8975", "kind": "federal", "agency": "Internal Revenue Service", "website": "https://www.irs.gov"}, {"id": "state-al", "name": "Alabama", "kind": "state", "agency": "Alabama Department of Revenue", "website": "https://www.revenue.alabama.gov"}, {"id": "state-ak", "name": "Alaska", "kind": "state", "agency": "Alaska Department of Revenue, Tax Division", "website": "https://tax.alaska.gov"}, {"id": "state-az", "name": "Arizona", "kind": "state", "agency": "Arizona Department of Revenue", "website": "https://azdor.gov"}, {"id": "state-ar", "name": "Arkansas", "kind": "state", "agency": "Arkansas Department of Finance and Administration", "website": "https://www.dfa.arkansas.gov"}, {"id": "state-ca", "name": "California", "kind": "state", "agency": "California Franchise Tax Board", "website": "https://www.ftb.ca.gov"}, {"id": "state-co", "name": "Colorado", "kind": "state", "agency": "Colorado Department of Revenue", "website": "https://tax.colorado.gov"}, {"id": "state-ct", "name": "Connecticut", "kind": "state", "agency": "Connecticut Department of Revenue Services", "website": "https://portal.ct.gov/drs"}, {"id": "state-de", "name": "Delaware", "kind": "state", "agency": "Delaware Division of Revenue", "website": "https://revenue.delaware.gov"}, {"id": "state-dc", "name": "District of Columbia", "kind": "state", "agency": "DC Office of Tax and Revenue", "website": "https://otr.cfo.dc.gov"}, {"id": "state-fl", "name": "Florida", "kind": "state", "agency": "Florida Department of Revenue", "website": "https://floridarevenue.com"}, {"id": "state-ga", "name": "Georgia", "kind": "state", "agency": "Georgia Department of Revenue", "website": "https://dor.georgia.gov"}, {"id": "state-hi", "name": "Hawaii", "kind": "state", "agency": "Hawaii Department of Taxation", "website": "https://tax.hawaii.gov"}, {"id": "state-id", "name": "Idaho", "kind": "state", "agency": "Idaho State Tax Commission", "website": "https://tax.idaho.gov"}, {"id": "state-il", "name": "Illinois", "kind": "state", "agency": "Illinois Department of Revenue", "website": "https://tax.illinois.gov"}, {"id": "state-in", "name": "Indiana", "kind": "state", "agency": "Indiana Department of Revenue", "website": "https://www.in.gov/dor"}, {"id": "state-ia", "name": "Iowa", "kind": "state", "agency": "Iowa Department of Revenue", "website": "https://tax.iowa.gov"}, {"id": "state-ks", "name": "Kansas", "kind": "state", "agency": "Kansas Department of Revenue", "website": "https://www.ksrevenue.gov"}, {"id": "state-ky", "name": "Kentucky", "kind": "state", "agency": "Kentucky Department of Revenue", "website": "https://revenue.ky.gov"}, {"id": "state-la", "name": "Louisiana", "kind": "state", "agency": "Louisiana Department of Revenue", "website": "https://revenue.louisiana.gov"}, {"id": "state-me", "name": "Maine", "kind": "state", "agency": "Maine Revenue Services", "website": "https://www.maine.gov/revenue"}, {"id": "state-md", "name": "Maryland", "kind": "state", "agency": "Comptroller of Maryland", "website": "https://www.marylandtaxes.gov"}, {"id": "state-ma", "name": "Massachusetts", "kind": "state", "agency": "Massachusetts Department of Revenue", "website": "https://www.mass.gov/orgs/massachusetts-department-of-revenue"}, {"id": "state-mi", "name": "Michigan", "kind": "state", "agency": "Michigan Department of Treasury", "website": "https://www.michigan.gov/taxes"}, {"id": "state-mn", "name": "Minnesota", "kind": "state", "agency": "Minnesota Department of Revenue", "website": "https://www.revenue.state.mn.us"}, {"id": "state-ms", "name": "Mississippi", "kind": "state", "agency": "Mississippi Department of Revenue", "website": "https://www.dor.ms.gov"}, {"id": "state-mo", "name": "Missouri", "kind": "state", "agency": "Missouri Department of Revenue", "website": "https://dor.mo.gov"}, {"id": "state-mt", "name": "Montana", "kind": "state", "agency": "Montana Department of Revenue", "website": "https://mtrevenue.gov"}, {"id": "state-ne", "name": "Nebraska", "kind": "state", "agency": "Nebraska Department of Revenue", "website": "https://revenue.nebraska.gov"}, {"id": "state-nv", "name": "Nevada", "kind": "state", "agency": "Nevada Department of Taxation", "website": "https://tax.nv.gov"}, {"id": "state-nh", "name": "New Hampshire", "kind": "state", "agency": "New Hampshire Department of Revenue Administration", "website": "https://www.revenue.nh.gov"}, {"id": "state-nj", "name": "New Jersey", "kind": "state", "agency": "New Jersey Division of Taxation", "website": "https://www.nj.gov/treasury/taxation"}, {"id": "state-nm", "name": "New Mexico", "kind": "state", "agency": "New Mexico Taxation and Revenue Department", "website": "https://www.tax.newmexico.gov"}, {"id": "state-ny", "name": "New York", "kind": "state", "agency": "New York State Department of Taxation and Finance", "website": "https://www.tax.ny.gov"}, {"id": "state-nc", "name": "North Carolina", "kind": "state", "agency": "North Carolina Department of Revenue", "website": "https://www.ncdor.gov"}, {"id": "state-nd", "name": "North Dakota", "kind": "state", "agency": "North Dakota Office of State Tax Commissioner", "website": "https://www.tax.nd.gov"}, {"id": "state-oh", "name": "Ohio", "kind": "state", "agency": "Ohio Department of Taxation", "website": "https://tax.ohio.gov"}, {"id": "state-ok", "name": "Oklahoma", "kind": "state", "agency": "Oklahoma Tax Commission", "website": "https://oklahoma.gov/tax.html"}, {"id": "state-or", "name": "Oregon", "kind": "state", "agency": "Oregon Department of Revenue", "website": "https://www.oregon.gov/dor"}, {"id": "state-pa", "name": "Pennsylvania", "kind": "state", "agency": "Pennsylvania Department of Revenue", "website": "https://www.pa.gov/agencies/revenue"}, {"id": "state-ri", "name": "Rhode Island", "kind": "state", "agency": "Rhode Island Division of Taxation", "website": "https://tax.ri.gov"}, {"id": "state-sc", "name": "South Carolina", "kind": "state", "agency": "South Carolina Department of Revenue", "website": "https://dor.sc.gov"}, {"id": "state-sd", "name": "South Dakota", "kind": "state", "agency": "South Dakota Department of Revenue", "website": "https://dor.sd.gov"}, {"id": "state-tn", "name": "Tennessee", "kind": "state", "agency": "Tennessee Department of Revenue", "website": "https://www.tn.gov/revenue"}, {"id": "state-tx", "name": "Texas", "kind": "state", "agency": "Texas Comptroller of Public Accounts", "website": "https://comptroller.texas.gov"}, {"id": "state-ut", "name": "Utah", "kind": "state", "agency": "Utah State Tax Commission", "website": "https://tax.utah.gov"}, {"id": "state-vt", "name": "Vermont", "kind": "state", "agency": "Vermont Department of Taxes", "website": "https://tax.vermont.gov"}, {"id": "state-va", "name": "Virginia", "kind": "state", "agency": "Virginia Department of Taxation", "website": "https://www.tax.virginia.gov"}, {"id": "state-wa", "name": "Washington", "kind": "state", "agency": "Washington State Department of Revenue", "website": "https://dor.wa.gov"}, {"id": "state-wv", "name": "West Virginia", "kind": "state", "agency": "West Virginia Tax Division", "website": "https://tax.wv.gov"}, {"id": "state-wi", "name": "Wisconsin", "kind": "state", "agency": "Wisconsin Department of Revenue", "website": "https://www.revenue.wi.gov"}, {"id": "state-wy", "name": "Wyoming", "kind": "state", "agency": "Wyoming Department of Revenue", "website": "https://revenue.wyo.gov"}, {"id": "state-nyc", "name": "New York City", "kind": "local", "agency": "New York City Department of Finance", "website": "https://www.nyc.gov/site/finance"}], "legisJurisdictions": [{"id": "legis-federal", "name": "Federal — Legislation", "kind": "federal", "agency": "United States Congress / Internal Revenue Service", "website": "https://www.congress.gov"}, {"id": "legis-al", "name": "Alabama — Legislation", "kind": "state", "agency": "Alabama Department of Revenue", "website": "https://www.revenue.alabama.gov"}, {"id": "legis-ak", "name": "Alaska — Legislation", "kind": "state", "agency": "Alaska Department of Revenue, Tax Division", "website": "https://tax.alaska.gov"}, {"id": "legis-az", "name": "Arizona — Legislation", "kind": "state", "agency": "Arizona Department of Revenue", "website": "https://azdor.gov"}, {"id": "legis-ar", "name": "Arkansas — Legislation", "kind": "state", "agency": "Arkansas Department of Finance and Administration", "website": "https://www.dfa.arkansas.gov"}, {"id": "legis-ca", "name": "California — Legislation", "kind": "state", "agency": "California Franchise Tax Board", "website": "https://www.ftb.ca.gov"}, {"id": "legis-co", "name": "Colorado — Legislation", "kind": "state", "agency": "Colorado Department of Revenue", "website": "https://tax.colorado.gov"}, {"id": "legis-ct", "name": "Connecticut — Legislation", "kind": "state", "agency": "Connecticut Department of Revenue Services", "website": "https://portal.ct.gov/drs"}, {"id": "legis-de", "name": "Delaware — Legislation", "kind": "state", "agency": "Delaware Division of Revenue", "website": "https://revenue.delaware.gov"}, {"id": "legis-dc", "name": "District of Columbia — Legislation", "kind": "state", "agency": "DC Office of Tax and Revenue", "website": "https://otr.cfo.dc.gov"}, {"id": "legis-fl", "name": "Florida — Legislation", "kind": "state", "agency": "Florida Department of Revenue", "website": "https://floridarevenue.com"}, {"id": "legis-ga", "name": "Georgia — Legislation", "kind": "state", "agency": "Georgia Department of Revenue", "website": "https://dor.georgia.gov"}, {"id": "legis-hi", "name": "Hawaii — Legislation", "kind": "state", "agency": "Hawaii Department of Taxation", "website": "https://tax.hawaii.gov"}, {"id": "legis-id", "name": "Idaho — Legislation", "kind": "state", "agency": "Idaho State Tax Commission", "website": "https://tax.idaho.gov"}, {"id": "legis-il", "name": "Illinois — Legislation", "kind": "state", "agency": "Illinois Department of Revenue", "website": "https://tax.illinois.gov"}, {"id": "legis-in", "name": "Indiana — Legislation", "kind": "state", "agency": "Indiana Department of Revenue", "website": "https://www.in.gov/dor"}, {"id": "legis-ia", "name": "Iowa — Legislation", "kind": "state", "agency": "Iowa Department of Revenue", "website": "https://tax.iowa.gov"}, {"id": "legis-ks", "name": "Kansas — Legislation", "kind": "state", "agency": "Kansas Department of Revenue", "website": "https://www.ksrevenue.gov"}, {"id": "legis-ky", "name": "Kentucky — Legislation", "kind": "state", "agency": "Kentucky Department of Revenue", "website": "https://revenue.ky.gov"}, {"id": "legis-la", "name": "Louisiana — Legislation", "kind": "state", "agency": "Louisiana Department of Revenue", "website": "https://revenue.louisiana.gov"}, {"id": "legis-me", "name": "Maine — Legislation", "kind": "state", "agency": "Maine Revenue Services", "website": "https://www.maine.gov/revenue"}, {"id": "legis-md", "name": "Maryland — Legislation", "kind": "state", "agency": "Comptroller of Maryland", "website": "https://www.marylandtaxes.gov"}, {"id": "legis-ma", "name": "Massachusetts — Legislation", "kind": "state", "agency": "Massachusetts Department of Revenue", "website": "https://www.mass.gov/orgs/massachusetts-department-of-revenue"}, {"id": "legis-mi", "name": "Michigan — Legislation", "kind": "state", "agency": "Michigan Department of Treasury", "website": "https://www.michigan.gov/taxes"}, {"id": "legis-mn", "name": "Minnesota — Legislation", "kind": "state", "agency": "Minnesota Department of Revenue", "website": "https://www.revenue.state.mn.us"}, {"id": "legis-ms", "name": "Mississippi — Legislation", "kind": "state", "agency": "Mississippi Department of Revenue", "website": "https://www.dor.ms.gov"}, {"id": "legis-mo", "name": "Missouri — Legislation", "kind": "state", "agency": "Missouri Department of Revenue", "website": "https://dor.mo.gov"}, {"id": "legis-mt", "name": "Montana — Legislation", "kind": "state", "agency": "Montana Department of Revenue", "website": "https://mtrevenue.gov"}, {"id": "legis-ne", "name": "Nebraska — Legislation", "kind": "state", "agency": "Nebraska Department of Revenue", "website": "https://revenue.nebraska.gov"}, {"id": "legis-nv", "name": "Nevada — Legislation", "kind": "state", "agency": "Nevada Department of Taxation", "website": "https://tax.nv.gov"}, {"id": "legis-nh", "name": "New Hampshire — Legislation", "kind": "state", "agency": "New Hampshire Department of Revenue Administration", "website": "https://www.revenue.nh.gov"}, {"id": "legis-nj", "name": "New Jersey — Legislation", "kind": "state", "agency": "New Jersey Division of Taxation", "website": "https://www.nj.gov/treasury/taxation"}, {"id": "legis-nm", "name": "New Mexico — Legislation", "kind": "state", "agency": "New Mexico Taxation and Revenue Department", "website": "https://www.tax.newmexico.gov"}, {"id": "legis-ny", "name": "New York — Legislation", "kind": "state", "agency": "New York State Department of Taxation and Finance", "website": "https://www.tax.ny.gov"}, {"id": "legis-nc", "name": "North Carolina — Legislation", "kind": "state", "agency": "North Carolina Department of Revenue", "website": "https://www.ncdor.gov"}, {"id": "legis-nd", "name": "North Dakota — Legislation", "kind": "state", "agency": "North Dakota Office of State Tax Commissioner", "website": "https://www.tax.nd.gov"}, {"id": "legis-oh", "name": "Ohio — Legislation", "kind": "state", "agency": "Ohio Department of Taxation", "website": "https://tax.ohio.gov"}, {"id": "legis-ok", "name": "Oklahoma — Legislation", "kind": "state", "agency": "Oklahoma Tax Commission", "website": "https://oklahoma.gov/tax.html"}, {"id": "legis-or", "name": "Oregon — Legislation", "kind": "state", "agency": "Oregon Department of Revenue", "website": "https://www.oregon.gov/dor"}, {"id": "legis-pa", "name": "Pennsylvania — Legislation", "kind": "state", "agency": "Pennsylvania Department of Revenue", "website": "https://www.pa.gov/agencies/revenue"}, {"id": "legis-ri", "name": "Rhode Island — Legislation", "kind": "state", "agency": "Rhode Island Division of Taxation", "website": "https://tax.ri.gov"}, {"id": "legis-sc", "name": "South Carolina — Legislation", "kind": "state", "agency": "South Carolina Department of Revenue", "website": "https://dor.sc.gov"}, {"id": "legis-sd", "name": "South Dakota — Legislation", "kind": "state", "agency": "South Dakota Department of Revenue", "website": "https://dor.sd.gov"}, {"id": "legis-tn", "name": "Tennessee — Legislation", "kind": "state", "agency": "Tennessee Department of Revenue", "website": "https://www.tn.gov/revenue"}, {"id": "legis-tx", "name": "Texas — Legislation", "kind": "state", "agency": "Texas Comptroller of Public Accounts", "website": "https://comptroller.texas.gov"}, {"id": "legis-ut", "name": "Utah — Legislation", "kind": "state", "agency": "Utah State Tax Commission", "website": "https://tax.utah.gov"}, {"id": "legis-vt", "name": "Vermont — Legislation", "kind": "state", "agency": "Vermont Department of Taxes", "website": "https://tax.vermont.gov"}, {"id": "legis-va", "name": "Virginia — Legislation", "kind": "state", "agency": "Virginia Department of Taxation", "website": "https://www.tax.virginia.gov"}, {"id": "legis-wa", "name": "Washington — Legislation", "kind": "state", "agency": "Washington State Department of Revenue", "website": "https://dor.wa.gov"}, {"id": "legis-wv", "name": "West Virginia — Legislation", "kind": "state", "agency": "West Virginia Tax Division", "website": "https://tax.wv.gov"}, {"id": "legis-wi", "name": "Wisconsin — Legislation", "kind": "state", "agency": "Wisconsin Department of Revenue", "website": "https://www.revenue.wi.gov"}, {"id": "legis-wy", "name": "Wyoming — Legislation", "kind": "state", "agency": "Wyoming Department of Revenue", "website": "https://revenue.wyo.gov"}, {"id": "legis-nyc", "name": "New York City — Legislation", "kind": "local", "agency": "New York City Department of Finance", "website": "https://www.nyc.gov/site/finance"}], "reviews": {"federal-1120": {"jurisdiction": "federal-1120", "tax_year": 2025, "compared_to_year": 2024, "reviewed_date": "2026-08-13", "coverage": {"documents_reviewed": [{"title": "Instructions for Form 1120 (2025)", "current_url": "https://www.irs.gov/instructions/i1120", "prior_url": "https://www.irs.gov/pub/irs-prior/i1120--2024.pdf", "current_revision": "2025", "prior_revision": "2024"}], "gaps": ["DEMO DATA: produced without network access. All entries are AI-recalled from the One Big Beautiful Bill Act (P.L. 119-21) and marked unverified; excerpts are illustrative, not verbatim. Re-run the federal-1120 agent in a network-enabled session to verify against the actual instructions."]}, "changes": [{"id": "sec-174a-domestic-research-expensing", "title": "Domestic research costs deductible again under new Section 174A", "summary": "For tax years beginning after December 31, 2024, domestic research and experimental expenditures are currently deductible under new Section 174A instead of being capitalized and amortized over 5 years under Section 174. Foreign research remains subject to 15-year amortization. Preparers must choose between deducting, electing 10-year amortization under Section 59(e)-style rules, or capitalizing, and small-business taxpayers may apply the change retroactively to 2022-2024 via amended returns or an accounting-method change under Rev. Proc. 2025-28. Expect a changed deduction line treatment and new election statements compared with the 2024 return.", "category": "income-or-deduction", "impact": "high", "status": "unverified", "form": "Form 1120", "who_is_affected": "All corporations with research and experimental expenditures.", "effective": "Tax years beginning after December 31, 2024; elective retroactivity to 2022 for eligible small-business taxpayers.", "source": {"document": "2025 Instructions for Form 1120", "url": "https://www.irs.gov/instructions/i1120", "prior_url": "https://www.irs.gov/pub/irs-prior/i1120--2024.pdf", "section": "What's New; Deductions", "page": ""}, "excerpt": {"current": "[ILLUSTRATIVE — verify against published instructions] Domestic research or experimental expenditures. For tax years beginning after December 31, 2024, section 174A allows a deduction for domestic research or experimental expenditures paid or incurred during the tax year. Alternatively, the corporation may elect to capitalize and amortize these expenditures over a period of not less than 60 months. Foreign research or experimental expenditures continue to be charged to capital account and amortized over 15 years under section 174.", "prior": "Research and experimental expenditures paid or incurred in tax years beginning after 2021 must be charged to a capital account and amortized ratably over a 5-year period (15-year period for expenditures attributable to foreign research)."}}, {"id": "bonus-depreciation-100-percent-restored", "title": "100% bonus depreciation permanently restored for property acquired after Jan 19, 2025", "summary": "The additional first-year depreciation allowance returns to 100% for qualified property acquired after January 19, 2025 and placed in service after that date, replacing the 40% rate that would otherwise have applied for 2025 under the TCJA phase-down. Property acquired on or before January 19, 2025 remains subject to the phase-down percentage. Preparers must track acquisition dates around the January 19, 2025 line and watch for a transitional election to apply the phase-down percentage instead.", "category": "income-or-deduction", "impact": "high", "status": "unverified", "form": "Form 1120 (with Form 4562)", "who_is_affected": "Corporations placing depreciable property in service during 2025.", "effective": "Property acquired after January 19, 2025.", "source": {"document": "2025 Instructions for Form 1120", "url": "https://www.irs.gov/instructions/i1120", "prior_url": "https://www.irs.gov/pub/irs-prior/i1120--2024.pdf", "section": "What's New", "page": ""}, "excerpt": {"current": "[ILLUSTRATIVE — verify against published instructions] Special depreciation allowance. The special depreciation allowance is 100% for qualified property acquired after January 19, 2025, and placed in service after January 19, 2025. For qualified property acquired before January 20, 2025, the allowance remains 40% (60% for certain long production period property and aircraft). See Form 4562 and its instructions.", "prior": "The special depreciation allowance is 60% for qualified property placed in service in 2024."}}, {"id": "sec-163j-ebitda-base-restored", "title": "Section 163(j) limitation computed on EBITDA basis again", "summary": "For tax years beginning after December 31, 2024, adjusted taxable income for the Section 163(j) business interest limitation is once again computed without regard to depreciation, amortization, and depletion (an EBITDA base), permanently reversing the EBIT-based computation that applied for 2022-2024. This generally increases the interest deduction cap. Form 8990 computations and any state decoupling from the change need to be revisited.", "category": "income-or-deduction", "impact": "high", "status": "unverified", "form": "Form 1120 (with Form 8990)", "who_is_affected": "Corporations subject to the business interest expense limitation.", "effective": "Tax years beginning after December 31, 2024.", "source": {"document": "2025 Instructions for Form 1120", "url": "https://www.irs.gov/instructions/i1120", "prior_url": "https://www.irs.gov/pub/irs-prior/i1120--2024.pdf", "section": "Limitations on Deductions; Business interest expense", "page": ""}, "excerpt": {"current": "[ILLUSTRATIVE — verify against published instructions] Business interest expense. For tax years beginning after 2024, adjusted taxable income is computed without regard to any deduction allowable for depreciation, amortization, or depletion. See section 163(j) and Form 8990.", "prior": "For tax years beginning after 2021, adjusted taxable income is computed taking into account deductions for depreciation, amortization, and depletion."}}, {"id": "clean-energy-credit-terminations", "title": "Several clean energy credits terminated for 2025-2026", "summary": "The One Big Beautiful Bill Act terminates a series of clean energy credits that corporations claimed through the general business credit, including the clean vehicle credits for vehicles acquired after September 30, 2025 and the commercial clean vehicle credit on the same date, with energy-property timelines tightened for wind and solar. The 2025 instructions and credit-form lineup reflect terminated or transition-limited credits versus the 2024 lists. Preparers should confirm eligibility dates on each credit form before carrying 2024 positions into 2025.", "category": "credit-or-incentive", "impact": "medium", "status": "unverified", "form": "Form 1120 (Schedule J; general business credit forms)", "who_is_affected": "Corporations claiming clean vehicle or energy credits.", "effective": "Various dates in 2025-2026 depending on the credit.", "source": {"document": "2025 Instructions for Form 1120", "url": "https://www.irs.gov/instructions/i1120", "prior_url": "https://www.irs.gov/pub/irs-prior/i1120--2024.pdf", "section": "Schedule J — Tax Computation and Payment; credits", "page": ""}, "excerpt": {"current": "[ILLUSTRATIVE — verify against published instructions] Certain credits terminated. The qualified commercial clean vehicle credit does not apply to vehicles acquired after September 30, 2025. See the applicable credit form instructions for termination and transition dates for other energy-related credits.", "prior": null}}]}, "state-ca": {"jurisdiction": "state-ca", "tax_year": 2024, "compared_to_year": 2023, "reviewed_date": "2026-08-13", "coverage": {"documents_reviewed": [{"title": "2024 Form 100 Booklet — Corporation Tax Booklet", "current_url": "https://www.ftb.ca.gov/forms/2024/2024-100-booklet.html", "prior_url": "https://www.ftb.ca.gov/forms/2023/2023-100-booklet.html", "current_revision": "2024", "prior_revision": "2023"}], "gaps": ["DEMO DATA: produced without network access. Entries are AI-recalled from California SB 167/SB 175 (2024) and marked unverified; excerpts are illustrative, not verbatim. Re-run the state-ca agent in a network-enabled session to verify against the actual booklet."]}, "changes": [{"id": "ca-nol-suspension-2024-2026", "title": "NOL deduction suspended for 2024-2026 for taxpayers over $1 million of income", "summary": "For tax years beginning on or after January 1, 2024 and before January 1, 2027, California suspends the net operating loss deduction for corporations with net business income or modified adjusted gross income of $1,000,000 or more. Carryover periods are extended for years the deduction is suspended. The 2023 booklet had no suspension, so 2024 returns for affected taxpayers must add back the NOL deduction and track the extended carryover.", "category": "nol-or-limitation", "impact": "high", "status": "unverified", "form": "CA Form 100 / Form 100W (FTB 3805Q)", "who_is_affected": "Corporations with net business income of $1 million or more.", "effective": "Tax years beginning on or after January 1, 2024 and before January 1, 2027.", "source": {"document": "2024 Form 100 Booklet", "url": "https://www.ftb.ca.gov/forms/2024/2024-100-booklet.html", "prior_url": "https://www.ftb.ca.gov/forms/2023/2023-100-booklet.html", "section": "What's New / Important Information", "page": ""}, "excerpt": {"current": "[ILLUSTRATIVE — verify against published booklet] Net Operating Loss (NOL) Suspension — For taxable years beginning on or after January 1, 2024, and before January 1, 2027, California has suspended the NOL carryover deduction. Corporations may continue to compute and carry over an NOL during the suspension period. The suspension does not apply to a corporation with net business income of less than $1,000,000. The carryover period for any NOL for which a deduction is denied by the suspension is extended.", "prior": null}}, {"id": "ca-business-credit-cap-5m", "title": "Business credit use capped at $5 million for 2024-2026", "summary": "For tax years beginning on or after January 1, 2024 and before January 1, 2027, the total of most business credits (including research and Enterprise Zone-type carryovers) that may reduce California tax is limited to $5,000,000 per year, applied at the combined-group level. A related election allows credits limited by the cap to be refunded over five years starting in the third year after the election. The 2023 booklet had no comparable cap, so 2024 credit utilization schedules change for large credit users.", "category": "credit-or-incentive", "impact": "high", "status": "unverified", "form": "CA Form 100 / Form 100W (FTB 3800-series credit schedules)", "who_is_affected": "Corporations and combined groups claiming more than $5 million of business credits.", "effective": "Tax years beginning on or after January 1, 2024 and before January 1, 2027.", "source": {"document": "2024 Form 100 Booklet", "url": "https://www.ftb.ca.gov/forms/2024/2024-100-booklet.html", "prior_url": "https://www.ftb.ca.gov/forms/2023/2023-100-booklet.html", "section": "What's New / Important Information", "page": ""}, "excerpt": {"current": "[ILLUSTRATIVE — verify against published booklet] Business Credit Limitation — For taxable years beginning on or after January 1, 2024, and before January 1, 2027, there is a $5,000,000 limitation on the application of business credits. The total of all business credits otherwise allowable may not reduce the tax by more than $5,000,000. For taxpayers included in a combined report, the limitation applies at the group level. The carryover period for any credit not allowed due to this limitation is extended by the number of taxable years the credit was not allowed.", "prior": null}}]}, "state-tx": {"jurisdiction": "state-tx", "tax_year": 2024, "compared_to_year": 2023, "reviewed_date": "2026-08-13", "coverage": {"documents_reviewed": [{"title": "2024 Texas Franchise Tax Report Information and Instructions", "current_url": "https://comptroller.texas.gov/taxes/franchise/forms/", "prior_url": "https://comptroller.texas.gov/taxes/franchise/forms/", "current_revision": "2024 report year", "prior_revision": "2023 report year"}], "gaps": ["DEMO DATA: produced without network access. Entries are AI-recalled from Texas SB 3 (2023, 88th Leg., 2nd C.S.) and marked unverified; excerpts are illustrative, not verbatim. Re-run the state-tx agent in a network-enabled session to verify against the actual instructions."]}, "changes": [{"id": "tx-no-tax-due-threshold-and-report-eliminated", "title": "No-tax-due threshold doubled to $2.47M; No Tax Due Report eliminated", "summary": "Beginning with the 2024 report year, the no-tax-due revenue threshold increases from $1,230,000 to $2,470,000 of annualized total revenue, and the No Tax Due Report (Form 05-163) is discontinued. Entities at or under the threshold no longer file a franchise tax report at all but must still file a Public Information Report or Ownership Information Report. Combined groups whose revenue is under the threshold still file the group report. This changes the filing decision tree for every small-entity engagement versus 2023.", "category": "rate-or-threshold", "impact": "high", "status": "unverified", "form": "Texas Franchise Tax Report (Forms 05-158, 05-163 discontinued, 05-102/05-167)", "who_is_affected": "Taxable entities with annualized total revenue at or below $2.47 million, and their preparers.", "effective": "Reports originally due on or after January 1, 2024.", "source": {"document": "2024 Texas Franchise Tax Report Information and Instructions", "url": "https://comptroller.texas.gov/taxes/franchise/forms/", "section": "What's New for Report Year 2024", "page": ""}, "excerpt": {"current": "[ILLUSTRATIVE — verify against published instructions] For reports originally due on or after January 1, 2024, a taxable entity whose annualized total revenue is less than or equal to $2,470,000 is no longer required to file a No Tax Due Report. However, the entity is still required to file Form 05-102, Public Information Report, or Form 05-167, Ownership Information Report. Form 05-163, No Tax Due Report, has been discontinued.", "prior": "A taxable entity whose annualized total revenue is less than or equal to $1,230,000 may file Form 05-163, No Tax Due Report."}}]}}, "legis": {"legis-federal": {"jurisdiction": "legis-federal", "window_start": "2025-01-01", "window_end": "2026-08-13", "reviewed_date": "2026-08-13", "coverage": {"sources_searched": ["https://www.congress.gov (enacted public laws, 119th Congress)", "https://www.irs.gov/newsroom"], "gaps": ["DEMO DATA: produced without network access. Entries are AI-recalled from the One Big Beautiful Bill Act (P.L. 119-21, enacted 2025-07-04) and marked unverified; excerpts are illustrative, not verbatim bill text. Re-run the legis-federal agent in a network-enabled session to verify against congress.gov."]}, "laws": [{"id": "obbba-domestic-business-provisions", "bill": "H.R. 1, 119th Congress (One Big Beautiful Bill Act)", "law_citation": "P.L. 119-21", "title": "OBBBA domestic business provisions: §174A expensing, 100% bonus, §163(j) EBITDA", "enacted_date": "2025-07-04", "effective": "Generally tax years beginning after December 31, 2024; bonus depreciation for property acquired after January 19, 2025; elective §174A retroactivity to 2022 for small-business taxpayers.", "stage": "enacted", "category": "income-or-deduction", "impact": "high", "status": "unverified", "summary_for_company": "Starting with the 2025 return, domestic R&E is deductible again under new Section 174A (foreign R&E stays on 15-year amortization), 100% bonus depreciation applies to property acquired after January 19, 2025, and the Section 163(j) limitation reverts to an EBITDA base. Decide deduct-vs-amortize for R&E, revisit any capitalized 2022-2024 domestic R&E for the catch-up/method-change options under Rev. Proc. 2025-28, and refresh the Form 8990 model since the higher ATI base may free previously carried-forward interest. The provision team should also re-project deferred taxes for the restored deductions.", "summary_for_firm": "Every corporate client with R&E, capex, or leveraged capital structures is affected beginning with 2025 returns. Small-business clients (average gross receipts under roughly $31M) can elect to apply Section 174A retroactively to 2022-2024 — triage the client list now for amended-return/refund opportunities. Capex-heavy clients need acquisition-date tracking around January 19, 2025 for the 100%-vs-40% bonus split, and clients with disallowed interest carryforwards should be modeled under the restored EBITDA base before extensions are calendared.", "affected_returns": ["Form 1120", "Form 1120-PC", "Form 4562", "Form 8990", "Form 4626"], "related_form_jurisdictions": ["federal-1120", "federal-1120-pc", "federal-8990"], "first_return_year_affected": 2025, "source": {"document": "One Big Beautiful Bill Act, P.L. 119-21", "url": "https://www.congress.gov/bill/119th-congress/house-bill/1", "section": "Secs. 70301-70307 (Title VII)", "page": ""}, "excerpt": {"passage": "[ILLUSTRATIVE — verify against enrolled bill text] SEC. 70302. FULL EXPENSING OF DOMESTIC RESEARCH AND EXPERIMENTAL EXPENDITURES. (a) IN GENERAL. — Part VI of subchapter B of chapter 1 is amended by inserting after section 174 the following new section: 'SEC. 174A. DOMESTIC RESEARCH AND EXPERIMENTAL EXPENDITURES. (a) IN GENERAL. — Notwithstanding section 263, there shall be allowed as a deduction any domestic research or experimental expenditures which are paid or incurred by the taxpayer during the taxable year.'", "amended_from": "Section 174(a)(2)(B) (as in effect for taxable years beginning after December 31, 2021): 'shall be allowed as an amortization deduction ratably over the 5-year period (15-year period in the case of any specified research or experimental expenditures which are attributable to foreign research)…'"}}, {"id": "obbba-international-provisions", "bill": "H.R. 1, 119th Congress (One Big Beautiful Bill Act)", "law_citation": "P.L. 119-21", "title": "OBBBA international overhaul: GILTI becomes NCTI, FDII becomes FDDEI, §250 rates reset", "enacted_date": "2025-07-04", "effective": "Generally tax years beginning after December 31, 2025.", "stage": "enacted", "category": "definition-change", "impact": "high", "status": "unverified", "summary_for_company": "For tax years beginning after 2025, the GILTI regime is renamed net CFC tested income (NCTI) with the QBAI-based deemed tangible income return eliminated, the FDII deduction becomes FDDEI, Section 250 deduction percentages are reset, and the deemed-paid credit haircut on tested income moves to 90%. Model the 2026 effective-rate impact now, expect Form 5471 Schedule I-1 and Form 8993 to be substantially revised, and revisit expense-apportionment positions since the computation base changes.", "summary_for_firm": "Clients with CFCs or export income face a materially different international computation starting with 2026 returns, and 2025-2026 provision work must reflect enacted-law rates today. Flag every client filing Forms 5471/8992/8993, quantify the loss of the QBAI exclusion (capital-intensive foreign operations are hit hardest), and brief clients that prior GILTI planning built around deemed tangible income returns no longer works. Watch for revised IRS forms and update organizers accordingly.", "affected_returns": ["Form 5471 Sch. I-1", "Form 8992", "Form 8993", "Form 1120 Sch. C", "Form 1118"], "related_form_jurisdictions": ["federal-5471", "federal-1120", "federal-8992", "federal-8993", "federal-1118"], "first_return_year_affected": 2026, "source": {"document": "One Big Beautiful Bill Act, P.L. 119-21", "url": "https://www.congress.gov/bill/119th-congress/house-bill/1", "section": "Secs. 70311-70323 (Title VII)", "page": ""}, "excerpt": {"passage": "[ILLUSTRATIVE — verify against enrolled bill text] SEC. 70312. MODIFICATIONS TO DETERMINATION OF NET CFC TESTED INCOME. (a) REPEAL OF TANGIBLE INCOME EXCLUSION. — Section 951A(b) is amended… (b) CONFORMING CHANGE OF NAME. — The term 'global intangible low-taxed income' is stricken each place it appears and replaced with 'net CFC tested income'.", "amended_from": "Section 951A(b)(1): 'The term \"global intangible low-taxed income\" means, with respect to any United States shareholder for any taxable year of such United States shareholder, the excess (if any) of — (A) such shareholder's net CFC tested income for such taxable year, over (B) such shareholder's net deemed tangible income return for such taxable year.'"}}]}, "legis-la": {"jurisdiction": "legis-la", "window_start": "2024-11-01", "window_end": "2026-08-13", "reviewed_date": "2026-08-13", "coverage": {"sources_searched": ["https://revenue.louisiana.gov (news / law changes)", "https://legis.la.gov (2024 Third Extraordinary Session acts)"], "gaps": ["DEMO DATA: produced without network access. Entries are AI-recalled from Louisiana's December 2024 special-session tax reform and marked unverified; excerpts are illustrative, not verbatim act text. Re-run the legis-la agent in a network-enabled session to verify against legis.la.gov."]}, "laws": [{"id": "la-act-11-flat-cit-rate", "bill": "HB 2, 2024 Third Extraordinary Session (Act 11)", "law_citation": "Act 11 of the 2024 Third Extraordinary Session", "title": "Louisiana adopts flat 5.5% corporate income tax rate with full expensing", "enacted_date": "2024-12-04", "effective": "Tax years beginning on or after January 1, 2025.", "stage": "enacted", "category": "rate-or-threshold", "impact": "high", "status": "unverified", "summary_for_company": "For tax years beginning on or after January 1, 2025, Louisiana replaces its graduated corporate rates (3.5%/5.5%/7.5%) with a flat 5.5% rate and allows permanent full expensing of qualifying capital and research expenditures by election. Update the 2025 CIFT-620 rate computation and state provision rate, and evaluate the state-level bonus/R&E expensing election since it is independent of federal treatment.", "summary_for_firm": "All Louisiana corporate filers move to a flat 5.5% rate for 2025 — top-bracket clients get a cut, small-bracket clients may see an increase, so re-project estimates before Q1 2025 vouchers. The new elective full-expensing regime is a planning conversation for every capex- or R&E-heavy Louisiana client, and multi-state clients need their Louisiana deferred-rate assumptions updated in year-end 2024 provisions.", "affected_returns": ["LA Form CIFT-620"], "related_form_jurisdictions": ["state-la"], "first_return_year_affected": 2025, "source": {"document": "Act 11, 2024 Third Extraordinary Session (HB 2)", "url": "https://legis.la.gov/legis/BillInfo.aspx?s=243ES&b=HB2", "section": "Amending La. R.S. 47:287.12", "page": ""}, "excerpt": {"passage": "[ILLUSTRATIVE — verify against enrolled act] Section 1. R.S. 47:287.12 is hereby amended and reenacted to read as follows: §287.12. Rates of tax. The tax to be assessed, levied, collected, and paid upon the Louisiana taxable income of every corporation shall be computed at the rate of five and one-half percent of Louisiana taxable income.", "amended_from": "R.S. 47:287.12 (prior law): 'three and one-half percent upon the first fifty thousand dollars of Louisiana taxable income; five and one-half percent upon the amount above fifty thousand dollars but not in excess of one hundred fifty thousand dollars; seven and one-half percent on the amount above one hundred fifty thousand dollars.'"}}, {"id": "la-act-6-franchise-tax-repeal", "bill": "HB 3, 2024 Third Extraordinary Session (Act 6)", "law_citation": "Act 6 of the 2024 Third Extraordinary Session", "title": "Corporation franchise tax repealed for periods beginning on or after January 1, 2026", "enacted_date": "2024-12-04", "effective": "Franchise tax periods beginning on or after January 1, 2026.", "stage": "enacted", "category": "other", "impact": "high", "status": "unverified", "summary_for_company": "The Louisiana corporation franchise tax is repealed for taxable periods beginning on or after January 1, 2026, so the 2025 franchise period (reported on the return filed in 2025) is the last one. Plan for the final CIFT-620 franchise computation, track any unused franchise-tax credits under the transition rules, and remove the franchise accrual from 2026 forecasts.", "summary_for_firm": "Every Louisiana client that pays franchise tax stops accruing it for periods beginning in 2026 — communicate the sunset alongside 2025 planning, confirm final-period filings are correct, and review clients with franchise-tax credit carryforwards for transition treatment. Combined federal/state engagement letters and fee scopes referencing the franchise return should be updated for 2026.", "affected_returns": ["LA Form CIFT-620 (franchise tax portion)"], "related_form_jurisdictions": ["state-la"], "first_return_year_affected": 2026, "source": {"document": "Act 6, 2024 Third Extraordinary Session (HB 3)", "url": "https://legis.la.gov/legis/BillInfo.aspx?s=243ES&b=HB3", "section": "Repealing La. R.S. 47:601 et seq.", "page": ""}, "excerpt": {"passage": "[ILLUSTRATIVE — verify against enrolled act] Section 2. R.S. 47:601 through 618 are hereby repealed in their entirety, effective for franchise taxable periods beginning on or after January 1, 2026. No corporation franchise tax shall be levied, assessed, or collected for any taxable period beginning on or after such date.", "amended_from": null}}]}}, "categoryLabels": {"reporting-requirement": "Reporting requirement", "apportionment": "Apportionment", "state-modification": "State modification", "income-or-deduction": "Income / deduction", "rate-or-threshold": "Rate / threshold", "credit-or-incentive": "Credit / incentive", "nol-or-limitation": "NOL / limitation", "filing-method": "Filing method", "filing-procedure": "Filing procedure", "due-date": "Due date", "new-form-or-schedule": "New form / schedule", "conformity": "IRC conformity", "definition-change": "Definition change", "penalty": "Penalty", "other": "Other"}}</script>
+<script>
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const CAT = DATA.categoryLabels;
+const state = { tab: 'forms', jur: null, q: '', cats: new Set(), imps: new Set(),
+                verifiedOnly: false, aud: 'company' };
+
+const allChanges = [];
+for (const [jid, rev] of Object.entries(DATA.reviews))
+  for (const c of rev.changes) allChanges.push({ ...c, _jid: jid, _rev: rev });
+const allLaws = [];
+for (const [jid, rev] of Object.entries(DATA.legis))
+  for (const c of rev.laws) allLaws.push({ ...c, _jid: jid, _rev: rev });
+
+const jurById = Object.fromEntries(
+  DATA.jurisdictions.concat(DATA.legisJurisdictions).map(j => [j.id, j]));
+
+function items() { return state.tab === 'forms' ? allChanges : allLaws; }
+function jurs()  { return state.tab === 'forms' ? DATA.jurisdictions : DATA.legisJurisdictions; }
+function files() { return state.tab === 'forms' ? DATA.reviews : DATA.legis; }
+function summaryOf(c) {
+  if (state.tab === 'forms') return c.summary;
+  return state.aud === 'company' ? c.summary_for_company : c.summary_for_firm;
+}
+
+function esc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function matches(c) {
+  if (state.jur && c._jid !== state.jur) return false;
+  if (state.cats.size && !state.cats.has(c.category)) return false;
+  if (state.imps.size && !state.imps.has(c.impact)) return false;
+  if (state.verifiedOnly && c.status !== 'verified') return false;
+  if (state.q) {
+    const hay = [c.title, c.summary, c.summary_for_company, c.summary_for_firm,
+                 c.form, c.bill, c.law_citation, c.who_is_affected,
+                 (c.affected_returns || []).join(' '),
+                 c.excerpt?.current, c.excerpt?.passage,
+                 CAT[c.category], jurById[c._jid]?.name].join(' ').toLowerCase();
+    if (!hay.includes(state.q)) return false;
+  }
+  return true;
+}
+
+function renderHeader() {
+  document.getElementById('subtitle').textContent = state.tab === 'forms'
+    ? 'Year-over-year changes in corporate tax form instructions — the federal corporate suite (1120, 1120-PC, 5471, 5472, 8865, 8858, 1118, 3800, 8990–8993) and all state jurisdictions. Click any change to preview the passage from the actual instructions.'
+    : 'Newly enacted legislation with corporate income tax return impact, tracked throughout the year. Toggle Company/Firm view for audience-specific summaries; click any law to preview the operative bill language.';
+  const reviewed = Object.keys(files()).length;
+  const total = items().length;
+  const high = items().filter(c => c.impact === 'high').length;
+  const pending = jurs().length - reviewed;
+  const nouns = state.tab === 'forms'
+    ? ['jurisdictions reviewed', 'awaiting review', 'changes tracked', 'high impact']
+    : ['jurisdictions monitored', 'not yet monitored', 'laws tracked', 'high impact'];
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><b>${reviewed}</b><span>${nouns[0]}</span></div>
+    <div class="stat"><b>${pending}</b><span>${nouns[1]}</span></div>
+    <div class="stat"><b>${total}</b><span>${nouns[2]}</span></div>
+    <div class="stat"><b>${high}</b><span>${nouns[3]}</span></div>`;
+}
+
+function renderNav() {
+  const counts = {};
+  for (const c of items()) counts[c._jid] = (counts[c._jid] || 0) + 1;
+  const groups = [['Federal', 'federal'], ['States', 'state'], ['Local', 'local']];
+  let html = `<button class="${state.jur === null ? 'on' : ''}" data-jur="">All jurisdictions <span class="n">${items().length}</span></button>`;
+  for (const [label, kind] of groups) {
+    const js = jurs().filter(j => j.kind === kind);
+    if (!js.length) continue;
+    html += `<h2>${label}</h2>`;
+    for (const j of js) {
+      const n = counts[j.id] || 0;
+      const reviewed = j.id in files();
+      html += `<button class="${state.jur === j.id ? 'on' : ''}" data-jur="${j.id}">
+        ${esc(j.name.replace(' — Legislation', ''))} <span class="n ${n ? '' : 'zero'}">${reviewed ? n : '—'}</span></button>`;
+    }
+  }
+  const nav = document.getElementById('nav');
+  nav.innerHTML = html;
+  nav.querySelectorAll('button').forEach(b => b.onclick = () => {
+    state.jur = b.dataset.jur || null;
+    render();
+  });
+}
+
+function badge(c) {
+  return `<span class="badge cat">${esc(CAT[c.category] || c.category)}</span>
+    <span class="badge ${c.impact}">${c.impact} impact</span>
+    ${c.stage === 'pending-signature' ? '<span class="badge stage">pending signature</span>' : ''}
+    ${c.status === 'unverified' ? '<span class="badge unverified">UNVERIFIED</span>' : ''}`;
+}
+
+function cardMeta(c) {
+  if (state.tab === 'forms') return `<span class="badge">${esc(c.form)}</span>`;
+  return `<span class="badge">${esc(c.bill)}</span>
+    <span class="badge">enacted ${esc(c.enacted_date)}</span>
+    ${c.first_return_year_affected ? `<span class="badge">first return: TY${c.first_return_year_affected}</span>` : ''}`;
+}
+
+function renderContent() {
+  const el = document.getElementById('content');
+  const byJur = new Map();
+  for (const c of items().filter(matches)) {
+    if (!byJur.has(c._jid)) byJur.set(c._jid, []);
+    byJur.get(c._jid).push(c);
+  }
+  if (!byJur.size) {
+    el.innerHTML = '<div class="empty">Nothing matches the current filters.' +
+      (state.jur && !(state.jur in files())
+        ? (state.tab === 'forms'
+           ? ' This jurisdiction has not been reviewed yet — run its agent to populate it.'
+           : ' This jurisdiction is not being monitored yet — run its legis- agent to start.') : '') + '</div>';
+    return;
+  }
+  let html = '';
+  for (const [jid, list] of byJur) {
+    const j = jurById[jid], rev = files()[jid];
+    const meta = state.tab === 'forms'
+      ? `TY${rev.tax_year} vs TY${rev.compared_to_year} · reviewed ${esc(rev.reviewed_date)}`
+      : `window ${esc(rev.window_start)} → ${esc(rev.window_end)} · reviewed ${esc(rev.reviewed_date)}`;
+    html += `<section class="jur-block"><h3>${esc((j?.name || jid).replace(' — Legislation', ''))}</h3>
+      <div class="meta">${esc(j?.agency || '')} · ${meta}</div>`;
+    for (const g of (rev.coverage?.gaps || [])) html += `<div class="gap">⚠ ${esc(g)}</div>`;
+    for (const c of list) {
+      const audLabel = state.tab === 'legis'
+        ? `<div class="aud-label">${state.aud === 'company' ? 'For your tax department' : 'For your client base'}</div>` : '';
+      html += `<article class="card" data-key="${jid}::${esc(c.id)}" tabindex="0" role="button">
+        <h4>${esc(c.title)}</h4>
+        <div class="badges">${badge(c)} ${cardMeta(c)}</div>
+        ${audLabel}
+        <p>${esc(summaryOf(c))}</p>
+        <div class="hint">Click to preview the ${state.tab === 'forms' ? 'passage from the instructions' : 'operative bill language'} ↗</div>
+      </article>`;
+    }
+    html += '</section>';
+  }
+  el.innerHTML = html;
+  el.querySelectorAll('.card').forEach(card => {
+    const open = () => openModal(card.dataset.key);
+    card.onclick = open;
+    card.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+  });
+}
+
+function openModal(key) {
+  const [jid, cid] = key.split('::');
+  const c = items().find(x => x._jid === jid && x.id === cid);
+  if (!c) return;
+  const j = jurById[jid], rev = files()[jid], src = c.source || {};
+  const cite = [src.document, src.section && `§ ${src.section}`, src.page && `p. ${src.page}`]
+    .filter(Boolean).map(esc).join(' · ');
+  let body;
+  if (state.tab === 'forms') {
+    body = `
+      <p class="summary">${esc(c.summary)}</p>
+      ${c.who_is_affected ? `<div class="kv"><b>Who is affected:</b> ${esc(c.who_is_affected)}</div>` : ''}
+      ${c.effective ? `<div class="kv"><b>Effective:</b> ${esc(c.effective)}</div>` : ''}
+      <div class="doc-label">From the ${rev.tax_year} instructions${src.section ? ` — ${esc(src.section)}` : ''}</div>
+      <div class="doc">${esc(c.excerpt?.current || '')}</div>
+      ${c.excerpt?.prior ? `<div class="doc-label">Prior year (${rev.compared_to_year}) text</div>
+        <div class="doc prior">${esc(c.excerpt.prior)}</div>`
+        : `<div class="kv" style="margin-top:10px"><b>Prior year:</b> no counterpart passage — this text is new.</div>`}`;
+  } else {
+    body = `
+      <div class="kv"><b>Bill:</b> ${esc(c.bill)}${c.law_citation ? ` · ${esc(c.law_citation)}` : ''}</div>
+      <div class="kv"><b>Enacted:</b> ${esc(c.enacted_date)}${c.effective ? ` · <b>Effective:</b> ${esc(c.effective)}` : ''}</div>
+      <div class="kv"><b>Returns affected:</b> ${esc((c.affected_returns || []).join(', '))}</div>
+      <div class="doc-label">For an in-house tax department</div>
+      <p class="summary">${esc(c.summary_for_company)}</p>
+      <div class="doc-label">For an accounting firm</div>
+      <p class="summary">${esc(c.summary_for_firm)}</p>
+      <div class="doc-label">Operative language${src.section ? ` — ${esc(src.section)}` : ''}</div>
+      <div class="doc">${esc(c.excerpt?.passage || '')}</div>
+      ${c.excerpt?.amended_from ? `<div class="doc-label">Law before amendment</div>
+        <div class="doc prior">${esc(c.excerpt.amended_from)}</div>` : ''}`;
+  }
+  document.getElementById('modal').innerHTML = `
+    <button class="close" aria-label="Close">✕</button>
+    <h3>${esc(c.title)}</h3>
+    <div class="badges">${badge(c)} <span class="badge">${esc((j?.name || jid).replace(' — Legislation', ''))}</span> ${cardMeta(c)}</div>
+    ${body}
+    <div class="cite">Source: ${cite || esc(src.url || '')}${src.url ? ` — <a href="${esc(src.url)}" target="_blank" rel="noopener">open source document</a>` : ''}${src.prior_url ? ` · <a href="${esc(src.prior_url)}" target="_blank" rel="noopener">prior-year document</a>` : ''}</div>
+    ${c.status === 'unverified' ? '<div class="warn">UNVERIFIED — this entry was drafted without confirming the passage against a retrieved copy of the source. Verify before relying on it.</div>' : ''}`;
+  const ov = document.getElementById('overlay');
+  ov.classList.add('open');
+  document.querySelector('#modal .close').onclick = closeModal;
+}
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+document.getElementById('overlay').addEventListener('click', e => { if (e.target.id === 'overlay') closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function renderFilters() {
+  const cats = [...new Set(items().map(c => c.category))].sort();
+  document.getElementById('catChips').innerHTML = cats.map(c =>
+    `<button class="chip ${state.cats.has(c) ? 'on' : ''}" data-cat="${c}">${esc(CAT[c] || c)}</button>`).join(' ');
+  document.getElementById('impChips').innerHTML = ['high', 'medium', 'low'].map(i =>
+    `<button class="chip ${state.imps.has(i) ? 'on' : ''}" data-imp="${i}">${i}</button>`).join(' ');
+  document.querySelectorAll('[data-cat]').forEach(b => b.onclick = () => {
+    state.cats.has(b.dataset.cat) ? state.cats.delete(b.dataset.cat) : state.cats.add(b.dataset.cat);
+    render();
+  });
+  document.querySelectorAll('[data-imp]').forEach(b => b.onclick = () => {
+    state.imps.has(b.dataset.imp) ? state.imps.delete(b.dataset.imp) : state.imps.add(b.dataset.imp);
+    render();
+  });
+  const v = document.getElementById('verifiedOnly');
+  v.classList.toggle('on', state.verifiedOnly);
+  v.onclick = () => { state.verifiedOnly = !state.verifiedOnly; render(); };
+  document.getElementById('audToggle').hidden = state.tab !== 'legis';
+}
+
+document.querySelectorAll('.tab').forEach(t => t.onclick = () => {
+  if (state.tab === t.dataset.tab) return;
+  state.tab = t.dataset.tab;
+  state.jur = null; state.cats.clear(); state.imps.clear();
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x === t));
+  render();
+});
+document.querySelectorAll('#audToggle button').forEach(b => b.onclick = () => {
+  state.aud = b.dataset.aud;
+  document.querySelectorAll('#audToggle button').forEach(x => x.classList.toggle('on', x === b));
+  renderContent();
+});
+document.getElementById('q').addEventListener('input', e => {
+  state.q = e.target.value.trim().toLowerCase();
+  renderContent();
+});
+
+function render() { renderHeader(); renderNav(); renderFilters(); renderContent(); }
+render();
+</script>
+</body>
+</html>

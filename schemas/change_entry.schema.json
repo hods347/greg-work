@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "change_entry.schema.json",
+  "title": "Jurisdiction change file",
+  "description": "One file per jurisdiction at data/changes/<jurisdiction-id>.json. Produced by that jurisdiction's agent, consumed by scripts/generate_report.py.",
+  "type": "object",
+  "required": ["jurisdiction", "tax_year", "compared_to_year", "reviewed_date", "coverage", "changes"],
+  "properties": {
+    "jurisdiction": {
+      "type": "string",
+      "description": "Jurisdiction id matching scripts/jurisdictions.py (e.g., 'federal-1120', 'state-ca')."
+    },
+    "tax_year": {
+      "type": "integer",
+      "description": "The newer tax year / revision year reviewed."
+    },
+    "compared_to_year": {
+      "type": "integer",
+      "description": "The older tax year / revision year compared against."
+    },
+    "reviewed_date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Date the review was performed (YYYY-MM-DD)."
+    },
+    "coverage": {
+      "type": "object",
+      "required": ["documents_reviewed"],
+      "properties": {
+        "documents_reviewed": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["title", "current_url"],
+            "properties": {
+              "title": {"type": "string"},
+              "current_url": {"type": "string"},
+              "prior_url": {"type": "string"},
+              "current_revision": {"type": "string", "description": "e.g., '2025' or 'Rev. December 2025'"},
+              "prior_revision": {"type": "string"}
+            }
+          }
+        },
+        "gaps": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "Documents in scope that could not be retrieved or compared, with reason."
+        }
+      }
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "summary", "category", "impact", "status", "form", "source", "excerpt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "description": "Stable kebab-case id, unique within the file (e.g., 'bonus-depreciation-restored')."
+          },
+          "title": {
+            "type": "string",
+            "description": "Short preparer-facing headline (under ~90 chars)."
+          },
+          "summary": {
+            "type": "string",
+            "description": "AI-generated plain-language summary: what changed, versus prior year, and what the preparer must do differently. 2-5 sentences."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "reporting-requirement",
+              "apportionment",
+              "state-modification",
+              "income-or-deduction",
+              "rate-or-threshold",
+              "credit-or-incentive",
+              "nol-or-limitation",
+              "filing-method",
+              "filing-procedure",
+              "due-date",
+              "new-form-or-schedule",
+              "conformity",
+              "definition-change",
+              "penalty",
+              "other"
+            ]
+          },
+          "impact": {"type": "string", "enum": ["high", "medium", "low"]},
+          "status": {
+            "type": "string",
+            "enum": ["verified", "unverified"],
+            "description": "'verified' only when the excerpt was copied verbatim from a retrieved source document this run. AI-recalled entries must be 'unverified'."
+          },
+          "form": {"type": "string", "description": "Form/booklet the change appears in (e.g., 'Form 1120', 'CA Form 100 Booklet')."},
+          "who_is_affected": {"type": "string"},
+          "effective": {"type": "string", "description": "Effective date/tax-year language, if stated."},
+          "source": {
+            "type": "object",
+            "required": ["document", "url"],
+            "properties": {
+              "document": {"type": "string", "description": "Document title incl. revision (e.g., '2025 Instructions for Form 1120')."},
+              "url": {"type": "string"},
+              "prior_url": {"type": "string"},
+              "section": {"type": "string", "description": "Section heading containing the passage (e.g., \"What's New\", 'Schedule J, line 3')."},
+              "page": {"type": "string", "description": "Page number(s) in the source PDF, if known."}
+            }
+          },
+          "excerpt": {
+            "type": "object",
+            "required": ["current"],
+            "properties": {
+              "current": {
+                "type": "string",
+                "description": "Verbatim passage from the CURRENT-year instructions supporting this change. Powers the report's click-to-preview. Copy exactly; trim with ellipses if long."
+              },
+              "prior": {
+                "type": ["string", "null"],
+                "description": "The corresponding PRIOR-year passage, verbatim, or null if the passage is entirely new."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

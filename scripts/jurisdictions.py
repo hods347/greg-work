@@ -276,3 +276,62 @@ LOCAL = [
 JURISDICTIONS = FEDERAL + STATES + LOCAL
 
 BY_ID = {j["id"]: j for j in JURISDICTIONS}
+
+# ---------------------------------------------------------------------------
+# Legislation-monitoring layer.
+#
+# Separate agent set with its own cadence: form-instruction reviews happen
+# annually, legislation monitoring runs throughout the year. Federal is a
+# single legislative jurisdiction (one Congress affects all four federal
+# forms); states and NYC map 1:1 to the form layer.
+# ---------------------------------------------------------------------------
+
+LEGIS_FEDERAL = {
+    "id": "legis-federal",
+    "name": "Federal — Legislation",
+    "kind": "federal",
+    "agency": "United States Congress / Internal Revenue Service",
+    "website": "https://www.congress.gov",
+    "sources": [
+        "https://www.congress.gov (enacted public laws; filter to revenue/tax)",
+        "https://www.irs.gov/newsroom (IRS implementation guidance and news)",
+        "https://home.treasury.gov (Treasury press releases)",
+        "https://www.jct.gov (Joint Committee on Taxation explanations)",
+    ],
+    "notes": (
+        "Track enacted public laws amending the Internal Revenue Code with "
+        "corporate income tax impact, plus major IRS implementation guidance "
+        "(revenue procedures, notices) that changes how corporations comply "
+        "with new law. Map every provision to the federal forms it touches "
+        "(1120, 5471, 8865, 8858, and their schedules)."
+    ),
+    # form-layer jurisdictions whose returns this legislation feeds into
+    "related_form_jurisdictions": [
+        "federal-1120", "federal-5471", "federal-8865", "federal-8858",
+    ],
+}
+
+
+def _legis_from_form_jurisdiction(j: dict) -> dict:
+    return {
+        "id": "legis-" + j["id"].removeprefix("state-"),
+        "name": f"{j['name']} — Legislation",
+        "kind": j["kind"],
+        "agency": j["agency"],
+        "website": j["website"],
+        "sources": [
+            f"{j['website']} (revenue agency news / law-change summaries)",
+            "State legislature bill-status site (enrolled/chaptered bills)",
+            "Governor's office bill-signing announcements",
+            "Revenue agency annual legislative summary publication, if issued",
+        ],
+        "notes": j["notes"],
+        "related_form_jurisdictions": [j["id"]],
+    }
+
+
+LEGIS_JURISDICTIONS = [LEGIS_FEDERAL] + [
+    _legis_from_form_jurisdiction(j) for j in STATES + LOCAL
+]
+
+LEGIS_BY_ID = {j["id"]: j for j in LEGIS_JURISDICTIONS}

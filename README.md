@@ -1,42 +1,62 @@
 # Tax Form Changes Tracker
 
-An agent-driven system that reviews corporate tax form instructions
-year-over-year — federal Forms **1120, 5471, 8865, 8858** and **every state
-jurisdiction** — and reports the changes that matter to a tax preparer:
-reporting requirements, apportionment rules, state modifications, rates and
-thresholds, credits, NOL limits, filing methods, and more.
+An agent-driven system with **two layers** of corporate tax change tracking:
 
-The output is an interactive HTML report (`report/index.html`) where each
-change carries an AI-generated summary, and **clicking a change pops out the
-verbatim passage from the actual form instructions** with its citation and a
-link to the source document.
+1. **Form-instruction changes (annual).** Reviews corporate tax form
+   instructions year-over-year — federal Forms **1120, 5471, 8865, 8858**
+   and **every state jurisdiction** — and reports the changes that matter to
+   a tax preparer: reporting requirements, apportionment rules, state
+   modifications, rates and thresholds, credits, NOL limits, filing methods.
+2. **Legislation monitoring (recurring).** Separate agents per jurisdiction
+   watch for **newly enacted legislation** with corporate income tax return
+   impact throughout the year. Every law gets two summaries — one written
+   for an in-house corporate tax department, one for an accounting firm
+   serving many clients — plus return-mapping fields
+   (`affected_returns`, `first_return_year_affected`) designed to be joined
+   against tax return preparation data later.
+
+The output is one interactive HTML report (`report/index.html`) with a tab
+per layer. Each entry carries an AI-generated summary, and **clicking it
+pops out the verbatim passage** — from the actual form instructions, or the
+operative bill language with the pre-amendment statute — with its citation
+and source links. The Legislation tab has a **Company view / Firm view**
+toggle that switches every summary to the chosen audience.
 
 ## How it works
 
 ```
-.claude/agents/<jurisdiction>.md      one agent per jurisdiction (56 total)
-        │  fetch → diff → summarize (guided by the skills below)
+.claude/agents/<jurisdiction>.md      form-instruction agents (56)
+.claude/agents/legis-<id>.md          legislation monitors (53)
+        │  fetch/search → diff/verify → summarize (guided by the skills below)
         ▼
 data/sources/<jurisdiction>/<year>/   cached instruction PDFs/HTML + text
-data/changes/<jurisdiction>.json      structured findings (schema-validated)
+data/changes/<jurisdiction>.json      instruction findings (schema-validated)
+data/legislation/<legis-id>.json      enacted-law findings (schema-validated)
         │
         ▼  scripts/generate_report.py
-report/index.html                     self-contained interactive report
+report/index.html                     self-contained two-tab report
 ```
 
-### Agents (one per jurisdiction)
+### Agents
 
 Generated from the registry in `scripts/jurisdictions.py` by
 `scripts/gen_agents.py` — do not hand-edit agent files; edit the registry or
 templates and re-run the generator.
 
+**Form-instruction layer (56):**
 - `federal-1120`, `federal-5471`, `federal-8865`, `federal-8858`
 - `state-al` … `state-wy` (all 50 states), `state-dc`, `state-nyc`
 
+**Legislation layer (53):**
+- `legis-federal` (one Congress covers all four federal forms)
+- `legis-al` … `legis-wy`, `legis-dc`, `legis-nyc`
+
 Each agent knows its jurisdiction's agency, primary forms, and regime
 profile (combined vs separate filing, conformity style, gross-receipts
-regimes for NV/OH/TX/WA, etc.), and follows the shared fetch → diff →
-summarize → validate workflow.
+regimes for NV/OH/TX/WA, etc.). Instruction agents follow fetch → diff →
+summarize → validate; legislation monitors follow a rolling-window
+search → primary-source verify → dual-audience summarize → validate
+workflow where each run picks up where the last `window_end` left off.
 
 ### Skills
 
@@ -45,19 +65,26 @@ summarize → validate workflow.
 | `fetch-form-instructions` | Locate & cache current + prior year instructions (IRS URL patterns, state DOR archives, Wayback fallback), extract text with page markers |
 | `diff-form-instructions` | Three-pass comparison: "What's New", structural sweep, targeted section diffs; substantive-vs-cosmetic rules |
 | `summarize-tax-changes` | Write schema-conforming change entries: preparer-focused summaries, categories, impact, verbatim excerpts, verified/unverified discipline |
-| `generate-changes-report` | Rebuild and QA the HTML report |
-| `review-jurisdiction` | Orchestrate one jurisdiction end-to-end (`/review-jurisdiction state-ca`) |
-| `review-all-jurisdictions` | Fan out the annual full-cycle run across all agents, then rebuild the report |
+| `generate-changes-report` | Rebuild and QA the two-tab HTML report |
+| `review-jurisdiction` | Orchestrate one instruction review end-to-end (`/review-jurisdiction state-ca`) |
+| `review-all-jurisdictions` | Fan out the annual full-cycle instruction run, then rebuild the report |
+| `monitor-legislation` | Search strategy + primary-source verification for newly enacted laws |
+| `summarize-legislation` | Write dual-audience legislation entries with return-mapping fields |
+| `track-legislation` | Run legislation monitoring for one/many/all jurisdictions (`/track-legislation legis-federal legis-ca`) — the recurring counterpart to the annual review |
 
 ## Usage
 
 ```bash
-# Review one jurisdiction (in a Claude Code session):
+# Review one jurisdiction's form instructions (in a Claude Code session):
 /review-jurisdiction federal-1120
 /review-jurisdiction state-ca
 
-# Full annual cycle:
+# Full annual instruction cycle:
 /review-all-jurisdictions
+
+# Recurring legislation sweeps (monthly/quarterly, or after budget season):
+/track-legislation legis-federal
+/track-legislation all
 
 # Rebuild the report manually:
 python3 scripts/validate_changes.py && python3 scripts/generate_report.py
@@ -71,20 +98,34 @@ Open `report/index.html` in any browser — it is fully self-contained
 
 ## Data contract
 
-Every change entry (see `schemas/change_entry.schema.json`) requires a
-verbatim `excerpt.current` passage, a source citation, a category from the
-fixed taxonomy, an impact rating, and a `status`:
+Both layers share the same discipline. Instruction entries
+(`schemas/change_entry.schema.json`) require a verbatim `excerpt.current`
+passage; legislation entries (`schemas/legislation_entry.schema.json`)
+require verbatim operative bill language in `excerpt.passage`, both
+audience summaries, and the return-mapping fields. Every entry carries a
+source citation, a category from the shared taxonomy, an impact rating,
+and a `status`:
 
 - **verified** — the excerpt was copied from a document retrieved during the
   review. This is the only trustworthy state.
 - **unverified** — drafted without confirming against a retrieved source.
   The report badges these prominently.
 
+## Roadmap: return-data comparison
+
+Legislation entries are deliberately structured for a future layer that
+joins them against tax return preparation data: `affected_returns` names
+the exact forms/schedules, `related_form_jurisdictions` links to the form
+layer, and `first_return_year_affected` anchors each law to a filing
+season. That comparison (which clients/entities are actually exposed to
+each change) is planned but not built yet.
+
 ## ⚠ Current data is demo data
 
-The three change files now in `data/changes/` (federal-1120, state-ca,
-state-tx) were produced in a **network-restricted session**: entries are
-AI-recalled, marked `unverified`, and their excerpts are illustrative rather
-than verbatim. They exist to exercise the pipeline and the report UI.
-Run the agents in a session with web access to replace them with verified
-findings before relying on anything here.
+The files now in `data/changes/` (federal-1120, state-ca, state-tx) and
+`data/legislation/` (legis-federal, legis-la) were produced in a
+**network-restricted session**: entries are AI-recalled, marked
+`unverified`, and their excerpts are illustrative rather than verbatim.
+They exist to exercise the pipeline and the report UI. Run the agents in a
+session with web access to replace them with verified findings before
+relying on anything here.

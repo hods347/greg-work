@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Validate jurisdiction change files against the repo's schema and registry.
+"""Validate change files and legislation files against schema and registry.
 
 Usage:
-    python3 scripts/validate_changes.py                 # validate all of data/changes/
+    python3 scripts/validate_changes.py     # all of data/changes/ + data/legislation/
     python3 scripts/validate_changes.py data/changes/state-ca.json
+    python3 scripts/validate_changes.py data/legislation/legis-ca.json
+
+File type is detected by content: a "laws" key means a legislation file,
+a "changes" key means a form-instruction change file.
 
 Dependency-free (no jsonschema): enforces the checks that matter for the
 report pipeline. Exits non-zero on any error.
@@ -13,10 +17,11 @@ import pathlib
 import re
 import sys
 
-from jurisdictions import BY_ID
+from jurisdictions import BY_ID, LEGIS_BY_ID
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 CHANGES_DIR = ROOT / "data" / "changes"
+LEGIS_DIR = ROOT / "data" / "legislation"
 
 CATEGORIES = {
     "reporting-requirement", "apportionment", "state-modification",
@@ -100,14 +105,100 @@ def validate_file(path: pathlib.Path) -> list[str]:
     return errs
 
 
+def validate_legislation_file(path: pathlib.Path) -> list[str]:
+    errs: list[str] = []
+
+    def err(msg: str) -> None:
+        errs.append(f"{path.name}: {msg}")
+
+    try:
+        doc = json.loads(path.read_text())
+    except json.JSONDecodeError as e:
+        return [f"{path.name}: invalid JSON — {e}"]
+
+    for key in ("jurisdiction", "window_start", "window_end", "reviewed_date", "coverage", "laws"):
+        if key not in doc:
+            err(f"missing top-level key '{key}'")
+    if errs:
+        return errs
+
+    jid = doc["jurisdiction"]
+    if jid not in LEGIS_BY_ID:
+        err(f"unknown legislative jurisdiction '{jid}' (see scripts/jurisdictions.py)")
+    if path.stem != jid:
+        err(f"filename should be {jid}.json to match its jurisdiction field")
+    for key in ("window_start", "window_end", "reviewed_date"):
+        if not DATE_RE.match(str(doc[key])):
+            err(f"{key} must be YYYY-MM-DD")
+    if str(doc["window_start"]) >= str(doc["window_end"]):
+        err("window_start must precede window_end")
+
+    cov = doc["coverage"]
+    if not isinstance(cov, dict) or not isinstance(cov.get("sources_searched"), list) or not cov.get("sources_searched"):
+        err("coverage.sources_searched must be a non-empty list")
+
+    seen_ids: set[str] = set()
+    for i, c in enumerate(doc["laws"]):
+        where = f"laws[{i}]"
+        for key in ("id", "bill", "title", "enacted_date", "stage", "category",
+                    "impact", "status", "summary_for_company", "summary_for_firm",
+                    "affected_returns", "source", "excerpt"):
+            if key not in c:
+                err(f"{where} missing '{key}'")
+        cid = c.get("id", "")
+        if cid:
+            where = f"laws[{i}] ({cid})"
+            if not ID_RE.match(cid):
+                err(f"{where}: id must be kebab-case")
+            if cid in seen_ids:
+                err(f"{where}: duplicate id")
+            seen_ids.add(cid)
+        if c.get("stage") not in {"enacted", "pending-signature"}:
+            err(f"{where}: bad stage '{c.get('stage')}'")
+        if c.get("category") not in CATEGORIES:
+            err(f"{where}: bad category '{c.get('category')}'")
+        if c.get("impact") not in IMPACTS:
+            err(f"{where}: bad impact '{c.get('impact')}'")
+        if c.get("status") not in STATUSES:
+            err(f"{where}: bad status '{c.get('status')}'")
+        if c.get("enacted_date") and not DATE_RE.match(str(c["enacted_date"])):
+            err(f"{where}: enacted_date must be YYYY-MM-DD")
+        if not isinstance(c.get("affected_returns"), list) or not c.get("affected_returns"):
+            err(f"{where}: affected_returns must be a non-empty list of form names")
+        src = c.get("source") or {}
+        if not src.get("document") or not src.get("url"):
+            err(f"{where}: source needs 'document' and 'url'")
+        exc = c.get("excerpt") or {}
+        if not exc.get("passage"):
+            err(f"{where}: excerpt.passage is required (verbatim operative language)")
+        elif len(exc["passage"]) < 40:
+            err(f"{where}: excerpt.passage is suspiciously short — copy the operative language")
+        for k in ("summary_for_company", "summary_for_firm"):
+            if c.get(k) and len(c[k]) < 60:
+                err(f"{where}: {k} is too thin to be useful")
+    return errs
+
+
+def dispatch(path: pathlib.Path) -> list[str]:
+    try:
+        doc = json.loads(path.read_text())
+    except json.JSONDecodeError as e:
+        return [f"{path.name}: invalid JSON — {e}"]
+    if "laws" in doc:
+        return validate_legislation_file(path)
+    return validate_file(path)
+
+
 def main(argv: list[str]) -> int:
-    paths = [pathlib.Path(p) for p in argv[1:]] or sorted(CHANGES_DIR.glob("*.json"))
+    paths = [pathlib.Path(p) for p in argv[1:]] or (
+        sorted(CHANGES_DIR.glob("*.json")) + sorted(LEGIS_DIR.glob("*.json"))
+    )
     if not paths:
         print(f"no change files found in {CHANGES_DIR}")
         return 1
     all_errs: list[str] = []
     for p in paths:
-        all_errs.extend(validate_file(p))
+        all_errs.extend(dispatch(p))
     if all_errs:
         print("\n".join(all_errs))
         print(f"\nFAILED: {len(all_errs)} error(s) across {len(paths)} file(s)")

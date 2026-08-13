@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "legislation_entry.schema.json",
+  "title": "Jurisdiction legislation file",
+  "description": "One file per legislative jurisdiction at data/legislation/<legis-id>.json. Produced by that jurisdiction's legislation-monitor agent, consumed by scripts/generate_report.py.",
+  "type": "object",
+  "required": ["jurisdiction", "window_start", "window_end", "reviewed_date", "coverage", "laws"],
+  "properties": {
+    "jurisdiction": {
+      "type": "string",
+      "description": "Legislative jurisdiction id from scripts/jurisdictions.py (e.g., 'legis-federal', 'legis-ca')."
+    },
+    "window_start": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "Start of the enactment window searched (YYYY-MM-DD)."
+    },
+    "window_end": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+      "description": "End of the enactment window searched. The next run starts here."
+    },
+    "reviewed_date": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "coverage": {
+      "type": "object",
+      "required": ["sources_searched"],
+      "properties": {
+        "sources_searched": {
+          "type": "array",
+          "items": {"type": "string"},
+          "description": "URLs/publications actually swept this run."
+        },
+        "gaps": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "laws": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "bill", "title", "enacted_date", "stage", "category", "impact", "status", "summary_for_company", "summary_for_firm", "affected_returns", "source", "excerpt"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]*$",
+            "description": "Stable kebab-case id unique in the file (e.g., 'obbba-domestic-business-provisions'). One law may yield several entries when its provisions differ in category/impact."
+          },
+          "bill": {"type": "string", "description": "Bill number and session (e.g., 'H.R. 1, 119th Congress', 'SB 167 (2024)')."},
+          "law_citation": {"type": "string", "description": "Public law / chapter / act citation once assigned (e.g., 'P.L. 119-21', 'Ch. 34, Stats. 2024')."},
+          "title": {"type": "string", "description": "Short preparer-facing headline (under ~90 chars)."},
+          "enacted_date": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+          "effective": {"type": "string", "description": "Effective date / applicability language."},
+          "stage": {"type": "string", "enum": ["enacted", "pending-signature"]},
+          "category": {
+            "type": "string",
+            "enum": [
+              "reporting-requirement", "apportionment", "state-modification",
+              "income-or-deduction", "rate-or-threshold", "credit-or-incentive",
+              "nol-or-limitation", "filing-method", "filing-procedure",
+              "due-date", "new-form-or-schedule", "conformity",
+              "definition-change", "penalty", "other"
+            ]
+          },
+          "impact": {"type": "string", "enum": ["high", "medium", "low"]},
+          "status": {
+            "type": "string",
+            "enum": ["verified", "unverified"],
+            "description": "'verified' only when excerpt.passage was copied verbatim from a primary source retrieved this run."
+          },
+          "summary_for_company": {
+            "type": "string",
+            "description": "For an in-house corporate tax department: what this law changes for OUR returns/provision, what to do and by when. 2-5 sentences."
+          },
+          "summary_for_firm": {
+            "type": "string",
+            "description": "For an accounting firm: which clients are affected, what changes in preparation across the book of business, planning/communication points. 2-5 sentences."
+          },
+          "affected_returns": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Specific returns/forms touched (e.g., 'Form 1120', 'Form 5471 Sch. I-1', 'NJ CBT-100U'). Join key for future return-data comparison."
+          },
+          "related_form_jurisdictions": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "Form-layer jurisdiction ids this law feeds into (e.g., ['federal-1120'])."
+          },
+          "first_return_year_affected": {
+            "type": "integer",
+            "description": "First tax year whose return changes because of this law. Join key for future return-data comparison."
+          },
+          "source": {
+            "type": "object",
+            "required": ["document", "url"],
+            "properties": {
+              "document": {"type": "string", "description": "Primary source title (enrolled bill, session law, agency summary)."},
+              "url": {"type": "string"},
+              "section": {"type": "string", "description": "Bill/act section containing the passage (e.g., 'Sec. 70301')."},
+              "page": {"type": "string"}
+            }
+          },
+          "excerpt": {
+            "type": "object",
+            "required": ["passage"],
+            "properties": {
+              "passage": {
+                "type": "string",
+                "description": "Verbatim operative language from the primary source. Powers the report's click-to-preview."
+              },
+              "amended_from": {
+                "type": ["string", "null"],
+                "description": "The prior statutory text this passage replaces, verbatim, when showing the before/after is useful."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

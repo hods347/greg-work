@@ -1,14 +1,18 @@
 # Tax Form Changes Tracker — working notes for Claude
 
-Purpose: review corporate tax form instructions year-over-year (federal
-1120/5471/8865/8858 + all states) and publish preparer-relevant changes in
-`report/index.html` with click-to-preview source passages.
+Purpose: two tracking layers published into one `report/index.html` with
+click-to-preview source passages:
+- **Form-instruction changes** (annual): federal 1120/5471/8865/8858 + all
+  states, agents `federal-*`/`state-*`, data in `data/changes/`.
+- **Legislation monitoring** (recurring): newly enacted corporate tax laws,
+  agents `legis-*`, data in `data/legislation/`, dual company/firm
+  summaries, rolling review windows (`window_end` → next `window_start`).
 
 ## Pipeline (always in this order)
 
-1. Jurisdiction agent (`.claude/agents/<id>.md`) fetches + diffs + writes
-   `data/changes/<id>.json`.
-2. `python3 scripts/validate_changes.py` — must pass before generating.
+1. Jurisdiction agent (`.claude/agents/<id>.md`) fetches/searches + writes
+   `data/changes/<id>.json` or `data/legislation/<id>.json`.
+2. `python3 scripts/validate_changes.py` — validates both layers; must pass.
 3. `python3 scripts/generate_report.py` — rebuilds `report/index.html`.
 
 ## Hard rules

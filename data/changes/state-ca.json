@@ -1,0 +1,66 @@
+{
+  "jurisdiction": "state-ca",
+  "tax_year": 2024,
+  "compared_to_year": 2023,
+  "reviewed_date": "2026-08-13",
+  "coverage": {
+    "documents_reviewed": [
+      {
+        "title": "2024 Form 100 Booklet — Corporation Tax Booklet",
+        "current_url": "https://www.ftb.ca.gov/forms/2024/2024-100-booklet.html",
+        "prior_url": "https://www.ftb.ca.gov/forms/2023/2023-100-booklet.html",
+        "current_revision": "2024",
+        "prior_revision": "2023"
+      }
+    ],
+    "gaps": [
+      "DEMO DATA: produced without network access. Entries are AI-recalled from California SB 167/SB 175 (2024) and marked unverified; excerpts are illustrative, not verbatim. Re-run the state-ca agent in a network-enabled session to verify against the actual booklet."
+    ]
+  },
+  "changes": [
+    {
+      "id": "ca-nol-suspension-2024-2026",
+      "title": "NOL deduction suspended for 2024-2026 for taxpayers over $1 million of income",
+      "summary": "For tax years beginning on or after January 1, 2024 and before January 1, 2027, California suspends the net operating loss deduction for corporations with net business income or modified adjusted gross income of $1,000,000 or more. Carryover periods are extended for years the deduction is suspended. The 2023 booklet had no suspension, so 2024 returns for affected taxpayers must add back the NOL deduction and track the extended carryover.",
+      "category": "nol-or-limitation",
+      "impact": "high",
+      "status": "unverified",
+      "form": "CA Form 100 / Form 100W (FTB 3805Q)",
+      "who_is_affected": "Corporations with net business income of $1 million or more.",
+      "effective": "Tax years beginning on or after January 1, 2024 and before January 1, 2027.",
+      "source": {
+        "document": "2024 Form 100 Booklet",
+        "url": "https://www.ftb.ca.gov/forms/2024/2024-100-booklet.html",
+        "prior_url": "https://www.ftb.ca.gov/forms/2023/2023-100-booklet.html",
+        "section": "What's New / Important Information",
+        "page": ""
+      },
+      "excerpt": {
+        "current": "[ILLUSTRATIVE — verify against published booklet] Net Operating Loss (NOL) Suspension — For taxable years beginning on or after January 1, 2024, and before January 1, 2027, California has suspended the NOL carryover deduction. Corporations may continue to compute and carry over an NOL during the suspension period. The suspension does not apply to a corporation with net business income of less than $1,000,000. The carryover period for any NOL for which a deduction is denied by the suspension is extended.",
+        "prior": null
+      }
+    },
+    {
+      "id": "ca-business-credit-cap-5m",
+      "title": "Business credit use capped at $5 million for 2024-2026",
+      "summary": "For tax years beginning on or after January 1, 2024 and before January 1, 2027, the total of most business credits (including research and Enterprise Zone-type carryovers) that may reduce California tax is limited to $5,000,000 per year, applied at the combined-group level. A related election allows credits limited by the cap to be refunded over five years starting in the third year after the election. The 2023 booklet had no comparable cap, so 2024 credit utilization schedules change for large credit users.",
+      "category": "credit-or-incentive",
+      "impact": "high",
+      "status": "unverified",
+      "form": "CA Form 100 / Form 100W (FTB 3800-series credit schedules)",
+      "who_is_affected": "Corporations and combined groups claiming more than $5 million of business credits.",
+      "effective": "Tax years beginning on or after January 1, 2024 and before January 1, 2027.",
+      "source": {
+        "document": "2024 Form 100 Booklet",
+        "url": "https://www.ftb.ca.gov/forms/2024/2024-100-booklet.html",
+        "prior_url": "https://www.ftb.ca.gov/forms/2023/2023-100-booklet.html",
+        "section": "What's New / Important Information",
+        "page": ""
+      },
+      "excerpt": {
+        "current": "[ILLUSTRATIVE — verify against published booklet] Business Credit Limitation — For taxable years beginning on or after January 1, 2024, and before January 1, 2027, there is a $5,000,000 limitation on the application of business credits. The total of all business credits otherwise allowable may not reduce the tax by more than $5,000,000. For taxpayers included in a combined report, the limitation applies at the group level. The carryover period for any credit not allowed due to this limitation is extended by the number of taxable years the credit was not allowed.",
+        "prior": null
+      }
+    }
+  ]
+}

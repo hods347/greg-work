@@ -1,0 +1,43 @@
+{
+  "jurisdiction": "state-tx",
+  "tax_year": 2024,
+  "compared_to_year": 2023,
+  "reviewed_date": "2026-08-13",
+  "coverage": {
+    "documents_reviewed": [
+      {
+        "title": "2024 Texas Franchise Tax Report Information and Instructions",
+        "current_url": "https://comptroller.texas.gov/taxes/franchise/forms/",
+        "prior_url": "https://comptroller.texas.gov/taxes/franchise/forms/",
+        "current_revision": "2024 report year",
+        "prior_revision": "2023 report year"
+      }
+    ],
+    "gaps": [
+      "DEMO DATA: produced without network access. Entries are AI-recalled from Texas SB 3 (2023, 88th Leg., 2nd C.S.) and marked unverified; excerpts are illustrative, not verbatim. Re-run the state-tx agent in a network-enabled session to verify against the actual instructions."
+    ]
+  },
+  "changes": [
+    {
+      "id": "tx-no-tax-due-threshold-and-report-eliminated",
+      "title": "No-tax-due threshold doubled to $2.47M; No Tax Due Report eliminated",
+      "summary": "Beginning with the 2024 report year, the no-tax-due revenue threshold increases from $1,230,000 to $2,470,000 of annualized total revenue, and the No Tax Due Report (Form 05-163) is discontinued. Entities at or under the threshold no longer file a franchise tax report at all but must still file a Public Information Report or Ownership Information Report. Combined groups whose revenue is under the threshold still file the group report. This changes the filing decision tree for every small-entity engagement versus 2023.",
+      "category": "rate-or-threshold",
+      "impact": "high",
+      "status": "unverified",
+      "form": "Texas Franchise Tax Report (Forms 05-158, 05-163 discontinued, 05-102/05-167)",
+      "who_is_affected": "Taxable entities with annualized total revenue at or below $2.47 million, and their preparers.",
+      "effective": "Reports originally due on or after January 1, 2024.",
+      "source": {
+        "document": "2024 Texas Franchise Tax Report Information and Instructions",
+        "url": "https://comptroller.texas.gov/taxes/franchise/forms/",
+        "section": "What's New for Report Year 2024",
+        "page": ""
+      },
+      "excerpt": {
+        "current": "[ILLUSTRATIVE — verify against published instructions] For reports originally due on or after January 1, 2024, a taxable entity whose annualized total revenue is less than or equal to $2,470,000 is no longer required to file a No Tax Due Report. However, the entity is still required to file Form 05-102, Public Information Report, or Form 05-167, Ownership Information Report. Form 05-163, No Tax Due Report, has been discontinued.",
+        "prior": "A taxable entity whose annualized total revenue is less than or equal to $1,230,000 may file Form 05-163, No Tax Due Report."
+      }
+    }
+  ]
+}

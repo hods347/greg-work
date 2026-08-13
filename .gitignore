@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+# cached source documents can be large; the manifest of what was fetched
+# lives inside each data/changes/<id>.json coverage block
+data/sources/
+node_modules/

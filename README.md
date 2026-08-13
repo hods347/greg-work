@@ -4,10 +4,13 @@ An agent-driven system with **two layers** of corporate tax change tracking:
 
 1. **Form-instruction changes (annual).** Reviews corporate tax form
    instructions year-over-year — the federal corporate suite (**1120,
-   1120-PC, 5471, 5472, 8865, 8858, 1118, 3800, 8990, 8991, 8992, 8993**)
-   and **every state jurisdiction** — and reports the changes that matter to
-   a tax preparer: reporting requirements, apportionment rules, state
-   modifications, rates and thresholds, credits, NOL limits, filing methods.
+   1120-PC**, their separately-instructed schedules **D, M-3, O, PH, UTP**,
+   international forms **5471, 5472, 8865, 8858, 1118, 926, 8975, 8991,
+   8992, 8993**, and computation/disclosure forms **3800, 8990, 4626, 4562,
+   4797, 3115, 2220, 7004, 1125-A/E, 8886**) and **every state
+   jurisdiction** — and reports the changes that matter to a tax preparer:
+   reporting requirements, apportionment rules, state modifications, rates
+   and thresholds, credits, NOL limits, filing methods.
 2. **Legislation monitoring (recurring).** Separate agents per jurisdiction
    watch for **newly enacted legislation** with corporate income tax return
    impact throughout the year. Every law gets two summaries — one written
@@ -26,7 +29,7 @@ toggle that switches every summary to the chosen audience.
 ## How it works
 
 ```
-.claude/agents/<jurisdiction>.md      form-instruction agents (64)
+.claude/agents/<jurisdiction>.md      form-instruction agents (79)
 .claude/agents/legis-<id>.md          legislation monitors (53)
         │  fetch/search → diff/verify → summarize (guided by the skills below)
         ▼
@@ -44,12 +47,17 @@ Generated from the registry in `scripts/jurisdictions.py` by
 `scripts/gen_agents.py` — do not hand-edit agent files; edit the registry or
 templates and re-run the generator.
 
-**Form-instruction layer (64):**
+**Form-instruction layer (79):**
 - Core returns: `federal-1120`, `federal-1120-pc`
+- 1120 schedules with their own instructions: `federal-1120-sch-d`,
+  `federal-1120-sch-m3` (incl. 8916-A), `federal-1120-sch-o`,
+  `federal-1120-sch-ph`, `federal-1120-sch-utp`
 - International: `federal-5471`, `federal-5472`, `federal-8865`,
-  `federal-8858`, `federal-1118`, `federal-8991` (BEAT),
-  `federal-8992` (GILTI/NCTI), `federal-8993` (§250)
-- Deductions/credits: `federal-3800`, `federal-8990` (§163(j))
+  `federal-8858`, `federal-1118`, `federal-926`, `federal-8975`,
+  `federal-8991` (BEAT), `federal-8992` (GILTI/NCTI), `federal-8993` (§250)
+- Computation & disclosure: `federal-3800`, `federal-8990` (§163(j)),
+  `federal-4626` (CAMT), `federal-4562`, `federal-4797`, `federal-3115`,
+  `federal-2220`, `federal-7004`, `federal-1125` (1125-A/E), `federal-8886`
 - `state-al` … `state-wy` (all 50 states), `state-dc`, `state-nyc`
 
 **Legislation layer (53):**

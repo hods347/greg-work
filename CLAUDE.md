@@ -2,9 +2,11 @@
 
 Purpose: two tracking layers published into one `report/index.html` with
 click-to-preview source passages:
-- **Form-instruction changes** (annual): federal corporate suite
-  (1120, 1120-PC, 5471, 5472, 8865, 8858, 1118, 3800, 8990-8993) + all
-  states, agents `federal-*`/`state-*`, data in `data/changes/`.
+- **Form-instruction changes** (annual): federal corporate suite — 1120,
+  1120-PC, 1120 Schedules D/M-3/O/PH/UTP, 5471, 5472, 8865, 8858, 1118,
+  926, 8975, 3800, 8990-8993, 4626, 4562, 4797, 3115, 2220, 7004,
+  1125-A/E, 8886 — + all states, agents `federal-*`/`state-*`, data in
+  `data/changes/`.
 - **Legislation monitoring** (recurring): newly enacted corporate tax laws,
   agents `legis-*`, data in `data/legislation/`, dual company/firm
   summaries, rolling review windows (`window_end` → next `window_start`).

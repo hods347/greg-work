@@ -228,6 +228,268 @@ FEDERAL = [
             "record-maintenance requirement changes."
         ),
     },
+    # --- Form 1120 schedules with separately published instructions ---
+    {
+        "id": "federal-1120-sch-m3",
+        "name": "Federal — Schedule M-3 (1120)",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Schedule M-3 (Form 1120) (Net Income (Loss) Reconciliation for Corporations With Total Assets of $10 Million or More)", "Form 8916-A (Supplemental Attachment to Schedule M-3)"],
+        "instructions_current": "https://www.irs.gov/instructions/i1120sm3",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i1120sm3--{year}.pdf",
+        "notes": (
+            "Book-tax reconciliation. Watch: filing-threshold and "
+            "reduced-reporting options (Parts II/III relief for $10-50M "
+            "filers), line additions for new book-tax differences (research "
+            "capitalization vs 174A expensing, CAMT-related items), "
+            "mixed-group (1120-PC/L) reporting rules, and Form 8916-A "
+            "detail requirements for COGS and interest."
+        ),
+    },
+    {
+        "id": "federal-1120-sch-d",
+        "name": "Federal — Schedule D (1120)",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Schedule D (Form 1120) (Capital Gains and Losses)"],
+        "instructions_current": "https://www.irs.gov/instructions/i1120sd",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i1120sd--{year}.pdf",
+        "notes": (
+            "Corporate capital gains and losses. Watch: Form 8949 "
+            "integration and exception rules, digital-asset reporting "
+            "changes (broker reporting phase-ins), Section 1061/1092 "
+            "references, capital loss carryback/carryforward mechanics, and "
+            "opportunity-zone deferral reporting."
+        ),
+    },
+    {
+        "id": "federal-1120-sch-o",
+        "name": "Federal — Schedule O (1120)",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Schedule O (Form 1120) (Consent Plan and Apportionment Schedule for a Controlled Group)"],
+        "instructions_current": "https://www.irs.gov/instructions/i1120so",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i1120so--{year}.pdf",
+        "notes": (
+            "Controlled-group apportionment. Watch: apportionment of "
+            "group-level amounts (the Section 179 dollar limit, CAMT and "
+            "BEAT gross-receipts thresholds, accumulated earnings credit), "
+            "consent-plan mechanics, and brother-sister/combined group "
+            "definition changes."
+        ),
+    },
+    {
+        "id": "federal-1120-sch-ph",
+        "name": "Federal — Schedule PH (1120)",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Schedule PH (Form 1120) (U.S. Personal Holding Company (PHC) Tax)"],
+        "instructions_current": "https://www.irs.gov/instructions/i1120ph",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i1120ph--{year}.pdf",
+        "notes": (
+            "Personal holding company tax. Low-churn form: watch PHC income "
+            "definition changes, dividend-paid deduction mechanics, and the "
+            "20% PHC tax rate. A quick review most years."
+        ),
+    },
+    {
+        "id": "federal-1120-sch-utp",
+        "name": "Federal — Schedule UTP (1120)",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Schedule UTP (Form 1120) (Uncertain Tax Position Statement)"],
+        "instructions_current": "https://www.irs.gov/instructions/i1120utp",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i1120utp--{year}.pdf",
+        "notes": (
+            "Uncertain tax position disclosure. Watch: asset-threshold "
+            "changes (the who-must-file test), the contrary-authority and "
+            "relevant-line columns added in the 2022 redesign, concise "
+            "description standards, and coordination with reportable "
+            "transaction disclosures."
+        ),
+    },
+    # --- Computation forms cited throughout the 1120 instructions ---
+    {
+        "id": "federal-4626",
+        "name": "Federal — Form 4626 (CAMT)",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 4626 (Alternative Minimum Tax — Corporations)"],
+        "instructions_current": "https://www.irs.gov/instructions/i4626",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i4626--{year}.pdf",
+        "notes": (
+            "Corporate alternative minimum tax (15% on adjusted financial "
+            "statement income). New and volatile: watch applicable-"
+            "corporation determination (the $1B AFSI test and safe harbor), "
+            "AFSI adjustment lines tracking the proposed/final CAMT "
+            "regulations, foreign-parented group rules, and CAMT foreign "
+            "tax credit mechanics. Expect substantial YoY instruction "
+            "changes while regulations finalize."
+        ),
+    },
+    {
+        "id": "federal-4562",
+        "name": "Federal — Form 4562",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 4562 (Depreciation and Amortization)"],
+        "instructions_current": "https://www.irs.gov/instructions/i4562",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i4562--{year}.pdf",
+        "notes": (
+            "Depreciation and amortization. Watch: special depreciation "
+            "allowance percentage and acquisition-date rules (100% restored "
+            "for property acquired after 1/19/2025), Section 179 limits and "
+            "SUV caps (indexed), new qualified production property (Section "
+            "168(n)) elections, amortization code changes for Section "
+            "174/174A, and listed-property thresholds."
+        ),
+    },
+    {
+        "id": "federal-4797",
+        "name": "Federal — Form 4797",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 4797 (Sales of Business Property)"],
+        "instructions_current": "https://www.irs.gov/instructions/i4797",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i4797--{year}.pdf",
+        "notes": (
+            "Dispositions of business property. Watch: Section 1245/1250 "
+            "recapture rule changes (including recapture interactions with "
+            "restored 100% bonus depreciation), Section 179 recapture "
+            "reporting, involuntary conversion mechanics, and interplay "
+            "with Form 8949/Schedule D."
+        ),
+    },
+    {
+        "id": "federal-3115",
+        "name": "Federal — Form 3115",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 3115 (Application for Change in Accounting Method)"],
+        "instructions_current": "https://www.irs.gov/instructions/i3115",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i3115--{year}.pdf",
+        "notes": (
+            "Accounting method changes. Continuous-use form — compare "
+            "revision dates. Watch: automatic change procedure updates (the "
+            "annual Rev. Proc. list-of-automatic-changes and Rev. Proc. "
+            "2025-28's Section 174A method changes), designated change "
+            "numbers, audit-protection and Section 481(a) spread rules, and "
+            "duplicate-copy filing addresses."
+        ),
+    },
+    {
+        "id": "federal-2220",
+        "name": "Federal — Form 2220",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 2220 (Underpayment of Estimated Tax by Corporations)"],
+        "instructions_current": "https://www.irs.gov/instructions/i2220",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i2220--{year}.pdf",
+        "notes": (
+            "Estimated tax underpayment. Watch: annualization method "
+            "changes, large-corporation rules, treatment of CAMT and BEAT "
+            "in required installments (and any waiver relief notices), and "
+            "recapture-type taxes excluded from the computation."
+        ),
+    },
+    {
+        "id": "federal-7004",
+        "name": "Federal — Form 7004",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 7004 (Application for Automatic Extension of Time To File Certain Business Income Tax Returns)"],
+        "instructions_current": "https://www.irs.gov/instructions/i7004",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i7004--{year}.pdf",
+        "notes": (
+            "Business return extensions. Continuous-use form — compare "
+            "revision dates. Low churn: watch extension-period changes by "
+            "return type, e-file mandates, and payment mechanics. A quick "
+            "review most years."
+        ),
+    },
+    {
+        "id": "federal-1125",
+        "name": "Federal — Forms 1125-A / 1125-E",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 1125-A (Cost of Goods Sold)", "Form 1125-E (Compensation of Officers)"],
+        "instructions_current": "https://www.irs.gov/instructions/i1125e",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i1125e--{year}.pdf",
+        "notes": (
+            "COGS and officer compensation attachments. Continuous-use "
+            "forms; 1125-A instructions may be embedded in the form PDF "
+            "(f1125a) rather than a separate booklet — check both. Watch: "
+            "Section 263A small-taxpayer exemption threshold (indexed), "
+            "Section 471(c) inventory methods, the 1125-E receipts "
+            "threshold, and Section 162(m) covered-employee expansion "
+            "cross-references. A quick review most years."
+        ),
+    },
+    # --- Disclosure and international forms cited in the 1120 instructions ---
+    {
+        "id": "federal-8886",
+        "name": "Federal — Form 8886",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 8886 (Reportable Transaction Disclosure Statement)"],
+        "instructions_current": "https://www.irs.gov/instructions/i8886",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i8886--{year}.pdf",
+        "notes": (
+            "Reportable transaction disclosure. Continuous-use form — "
+            "compare revision dates. Watch: listed-transaction and "
+            "transaction-of-interest designations (micro-captives, "
+            "syndicated conservation easements, and successors), "
+            "protective-filing mechanics, OTSA copy requirements, and "
+            "penalty exposure cross-references."
+        ),
+    },
+    {
+        "id": "federal-926",
+        "name": "Federal — Form 926",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 926 (Return by a U.S. Transferor of Property to a Foreign Corporation)"],
+        "instructions_current": "https://www.irs.gov/instructions/i926",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i926--{year}.pdf",
+        "notes": (
+            "Outbound property transfers under Section 6038B. Continuous-"
+            "use form — compare revision dates. Watch: Section 367 "
+            "regulation changes (intangibles, Section 351/361 overlaps), "
+            "cash-transfer reporting thresholds, gain recognition agreement "
+            "cross-references, and penalty rules."
+        ),
+    },
+    {
+        "id": "federal-8975",
+        "name": "Federal — Form 8975",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 8975 (Country-by-Country Report)", "Schedule A (Form 8975)"],
+        "instructions_current": "https://www.irs.gov/instructions/i8975",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i8975--{year}.pdf",
+        "notes": (
+            "Country-by-country reporting for U.S. MNE groups with $850M+ "
+            "revenue. Watch: OECD Pillar Two-driven definitional changes, "
+            "constituent-entity and surrogate-filing rules, and any move "
+            "toward public CbC alignment. Low churn historically but high "
+            "stakes when it changes."
+        ),
+    },
 ]
 
 # (code, name, agency, website, main corporate forms, regime notes)

@@ -26,7 +26,7 @@ serving many clients.
   - https://www.jct.gov (Joint Committee on Taxation explanations)
 - Jurisdiction profile (regime context you must interpret changes against):
   Track enacted public laws amending the Internal Revenue Code with corporate income tax impact, plus major IRS implementation guidance (revenue procedures, notices) that changes how corporations comply with new law. Map every provision to the federal forms it touches (1120, 1120-PC, 5471, 5472, 8865, 8858, 1118, 3800, 8990-8993, and their schedules).
-- Related form-layer jurisdiction(s): federal-1120, federal-5471, federal-8865, federal-8858, federal-1120-pc, federal-1118, federal-3800, federal-8990, federal-8991, federal-8992, federal-8993, federal-5472, federal-1120-sch-m3, federal-1120-sch-d, federal-1120-sch-o, federal-1120-sch-ph, federal-1120-sch-utp, federal-4626, federal-4562, federal-4797, federal-3115, federal-2220, federal-7004, federal-1125, federal-8886, federal-926, federal-8975 — name the specific returns
+- Related form-layer jurisdiction(s): federal-1120, federal-5471, federal-8865, federal-8858, federal-1120-pc, federal-1118, federal-3800, federal-8990, federal-8991, federal-8992, federal-8993, federal-5472, federal-1120-sch-m3, federal-1120-sch-d, federal-1120-sch-o, federal-1120-sch-ph, federal-1120-sch-utp, federal-4626, federal-4562, federal-4797, federal-3115, federal-2220, federal-7004, federal-1125, federal-8886, federal-926, federal-8975, federal-6765, federal-3468, federal-8936, federal-5884 — name the specific returns
   and schedules each law touches in `affected_returns`.
 
 ## Review window

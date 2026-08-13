@@ -490,6 +490,83 @@ FEDERAL = [
             "stakes when it changes."
         ),
     },
+    # --- Individual credit forms feeding Form 3800 ---
+    {
+        "id": "federal-6765",
+        "name": "Federal — Form 6765",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 6765 (Credit for Increasing Research Activities)"],
+        "instructions_current": "https://www.irs.gov/instructions/i6765",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i6765--{year}.pdf",
+        "notes": (
+            "Research credit. High-churn: watch the new Section G business "
+            "component detail reporting (phased mandatory disclosure of "
+            "QRE detail per business component), Section E questions, the "
+            "Section 280C reduced-credit election interacting with restored "
+            "Section 174A expensing, payroll-tax offset mechanics for QSBs, "
+            "and ASC vs regular credit computation changes."
+        ),
+    },
+    {
+        "id": "federal-3468",
+        "name": "Federal — Form 3468",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 3468 (Investment Credit)"],
+        "instructions_current": "https://www.irs.gov/instructions/i3468",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i3468--{year}.pdf",
+        "notes": (
+            "Investment credit (energy credit under Section 48/48E, "
+            "advanced manufacturing under 48C/48D, rehabilitation). "
+            "High-churn: watch OBBBA's accelerated wind/solar "
+            "placed-in-service and beginning-of-construction deadlines, "
+            "foreign-entity-of-concern (FEOC) restrictions, prevailing "
+            "wage/apprenticeship certification lines, domestic-content and "
+            "energy-community bonus mechanics, and elective payment/"
+            "transfer registration requirements."
+        ),
+    },
+    {
+        "id": "federal-8936",
+        "name": "Federal — Form 8936",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 8936 (Clean Vehicle Credits)", "Schedule A (Form 8936)"],
+        "instructions_current": "https://www.irs.gov/instructions/i8936",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i8936--{year}.pdf",
+        "notes": (
+            "Clean vehicle credits (Sections 30D, 25E, 45W commercial). "
+            "Watch: OBBBA termination dates — no credit for vehicles "
+            "acquired after September 30, 2025 — transition rules for "
+            "binding contracts and placed-in-service timing, dealer "
+            "transfer-election unwind, VIN reporting, and the 45W "
+            "commercial clean vehicle computation corporations claim. "
+            "Expect the instructions to shrink dramatically post-2025; "
+            "confirm final-year claim mechanics."
+        ),
+    },
+    {
+        "id": "federal-5884",
+        "name": "Federal — Form 5884",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 5884 (Work Opportunity Credit)"],
+        "instructions_current": "https://www.irs.gov/instructions/i5884",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i5884--{year}.pdf",
+        "notes": (
+            "Work opportunity credit. Watch: the WOTC hiring deadline "
+            "(statutorily scheduled to expire for employees beginning work "
+            "after December 31, 2025 unless extended — confirm each year), "
+            "targeted-group definition changes, certification (Form 8850) "
+            "timing rules, and qualified-wage caps. Low churn structurally, "
+            "but the expiration/extension cycle is the recurring story."
+        ),
+    },
 ]
 
 # (code, name, agency, website, main corporate forms, regime notes)

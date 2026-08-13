@@ -6,9 +6,10 @@ An agent-driven system with **two layers** of corporate tax change tracking:
    instructions year-over-year — the federal corporate suite (**1120,
    1120-PC**, their separately-instructed schedules **D, M-3, O, PH, UTP**,
    international forms **5471, 5472, 8865, 8858, 1118, 926, 8975, 8991,
-   8992, 8993**, and computation/disclosure forms **3800, 8990, 4626, 4562,
-   4797, 3115, 2220, 7004, 1125-A/E, 8886**) and **every state
-   jurisdiction** — and reports the changes that matter to a tax preparer:
+   8992, 8993**, computation/disclosure forms **3800, 8990, 4626, 4562,
+   4797, 3115, 2220, 7004, 1125-A/E, 8886**, and credit forms **6765, 3468,
+   8936, 5884**) and **every state jurisdiction** — and reports the changes
+   that matter to a tax preparer:
    reporting requirements, apportionment rules, state modifications, rates
    and thresholds, credits, NOL limits, filing methods.
 2. **Legislation monitoring (recurring).** Separate agents per jurisdiction
@@ -29,7 +30,7 @@ toggle that switches every summary to the chosen audience.
 ## How it works
 
 ```
-.claude/agents/<jurisdiction>.md      form-instruction agents (79)
+.claude/agents/<jurisdiction>.md      form-instruction agents (83)
 .claude/agents/legis-<id>.md          legislation monitors (53)
         │  fetch/search → diff/verify → summarize (guided by the skills below)
         ▼
@@ -47,7 +48,7 @@ Generated from the registry in `scripts/jurisdictions.py` by
 `scripts/gen_agents.py` — do not hand-edit agent files; edit the registry or
 templates and re-run the generator.
 
-**Form-instruction layer (79):**
+**Form-instruction layer (83):**
 - Core returns: `federal-1120`, `federal-1120-pc`
 - 1120 schedules with their own instructions: `federal-1120-sch-d`,
   `federal-1120-sch-m3` (incl. 8916-A), `federal-1120-sch-o`,
@@ -58,6 +59,8 @@ templates and re-run the generator.
 - Computation & disclosure: `federal-3800`, `federal-8990` (§163(j)),
   `federal-4626` (CAMT), `federal-4562`, `federal-4797`, `federal-3115`,
   `federal-2220`, `federal-7004`, `federal-1125` (1125-A/E), `federal-8886`
+- Credit forms: `federal-6765` (research), `federal-3468` (investment),
+  `federal-8936` (clean vehicle), `federal-5884` (WOTC)
 - `state-al` … `state-wy` (all 50 states), `state-dc`, `state-nyc`
 
 **Legislation layer (53):**

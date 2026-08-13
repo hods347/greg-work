@@ -26,8 +26,8 @@
       "status": "unverified",
       "summary_for_company": "Starting with the 2025 return, domestic R&E is deductible again under new Section 174A (foreign R&E stays on 15-year amortization), 100% bonus depreciation applies to property acquired after January 19, 2025, and the Section 163(j) limitation reverts to an EBITDA base. Decide deduct-vs-amortize for R&E, revisit any capitalized 2022-2024 domestic R&E for the catch-up/method-change options under Rev. Proc. 2025-28, and refresh the Form 8990 model since the higher ATI base may free previously carried-forward interest. The provision team should also re-project deferred taxes for the restored deductions.",
       "summary_for_firm": "Every corporate client with R&E, capex, or leveraged capital structures is affected beginning with 2025 returns. Small-business clients (average gross receipts under roughly $31M) can elect to apply Section 174A retroactively to 2022-2024 — triage the client list now for amended-return/refund opportunities. Capex-heavy clients need acquisition-date tracking around January 19, 2025 for the 100%-vs-40% bonus split, and clients with disallowed interest carryforwards should be modeled under the restored EBITDA base before extensions are calendared.",
-      "affected_returns": ["Form 1120", "Form 4562", "Form 8990", "Form 4626"],
-      "related_form_jurisdictions": ["federal-1120"],
+      "affected_returns": ["Form 1120", "Form 1120-PC", "Form 4562", "Form 8990", "Form 4626"],
+      "related_form_jurisdictions": ["federal-1120", "federal-1120-pc", "federal-8990"],
       "first_return_year_affected": 2025,
       "source": {
         "document": "One Big Beautiful Bill Act, P.L. 119-21",
@@ -54,7 +54,7 @@
       "summary_for_company": "For tax years beginning after 2025, the GILTI regime is renamed net CFC tested income (NCTI) with the QBAI-based deemed tangible income return eliminated, the FDII deduction becomes FDDEI, Section 250 deduction percentages are reset, and the deemed-paid credit haircut on tested income moves to 90%. Model the 2026 effective-rate impact now, expect Form 5471 Schedule I-1 and Form 8993 to be substantially revised, and revisit expense-apportionment positions since the computation base changes.",
       "summary_for_firm": "Clients with CFCs or export income face a materially different international computation starting with 2026 returns, and 2025-2026 provision work must reflect enacted-law rates today. Flag every client filing Forms 5471/8992/8993, quantify the loss of the QBAI exclusion (capital-intensive foreign operations are hit hardest), and brief clients that prior GILTI planning built around deemed tangible income returns no longer works. Watch for revised IRS forms and update organizers accordingly.",
       "affected_returns": ["Form 5471 Sch. I-1", "Form 8992", "Form 8993", "Form 1120 Sch. C", "Form 1118"],
-      "related_form_jurisdictions": ["federal-5471", "federal-1120"],
+      "related_form_jurisdictions": ["federal-5471", "federal-1120", "federal-8992", "federal-8993", "federal-1118"],
       "first_return_year_affected": 2026,
       "source": {
         "document": "One Big Beautiful Bill Act, P.L. 119-21",

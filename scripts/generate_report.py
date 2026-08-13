@@ -319,7 +319,7 @@ function matches(c) {
 
 function renderHeader() {
   document.getElementById('subtitle').textContent = state.tab === 'forms'
-    ? 'Year-over-year changes in corporate tax form instructions — federal Forms 1120 / 5471 / 8865 / 8858 and all state jurisdictions. Click any change to preview the passage from the actual instructions.'
+    ? 'Year-over-year changes in corporate tax form instructions — the federal corporate suite (1120, 1120-PC, 5471, 5472, 8865, 8858, 1118, 3800, 8990–8993) and all state jurisdictions. Click any change to preview the passage from the actual instructions.'
     : 'Newly enacted legislation with corporate income tax return impact, tracked throughout the year. Toggle Company/Firm view for audience-specific summaries; click any law to preview the operative bill language.';
   const reviewed = Object.keys(files()).length;
   const total = items().length;

@@ -80,6 +80,154 @@ FEDERAL = [
             "changes, dormant-entity relief, foreign branch category rules."
         ),
     },
+    {
+        "id": "federal-1120-pc",
+        "name": "Federal — Form 1120-PC",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 1120-PC (U.S. Property and Casualty Insurance Company Income Tax Return)"],
+        "instructions_current": "https://www.irs.gov/instructions/i1120pc",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i1120pc--{year}.pdf",
+        "notes": (
+            "P&C insurance company return. Watch: loss reserve discounting "
+            "factors and Section 846 changes, proration percentages, "
+            "Schedule F/G computation changes, small-company (Section 831(b)) "
+            "election thresholds and micro-captive reporting requirements, "
+            "NAIC annual statement cross-references, and general Form 1120 "
+            "changes that carry over (bonus depreciation, Section 174A, "
+            "Section 163(j))."
+        ),
+    },
+    {
+        "id": "federal-1118",
+        "name": "Federal — Form 1118",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 1118 (Foreign Tax Credit — Corporations)"],
+        "instructions_current": "https://www.irs.gov/instructions/i1118",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i1118--{year}.pdf",
+        "notes": (
+            "Corporate foreign tax credit. Continuous-use form — compare IRS "
+            "revision dates (e.g., 'Rev. December 2024'), and check "
+            "month-named prior files like i1118--dec-2022.pdf. Watch: "
+            "Section 904 basket changes (incl. the NCTI basket renaming and "
+            "the deemed-paid credit percentage moving to 90% under OBBBA for "
+            "tax years beginning after 2025), Schedule A-L layout changes, "
+            "expense apportionment rules, foreign tax redetermination "
+            "(Schedule L) reporting, and creditability regulation updates."
+        ),
+    },
+    {
+        "id": "federal-3800",
+        "name": "Federal — Form 3800",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 3800 (General Business Credit)"],
+        "instructions_current": "https://www.irs.gov/instructions/i3800",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i3800--{year}.pdf",
+        "notes": (
+            "General business credit aggregation. Watch: Part III credit "
+            "code list additions/removals (energy credit terminations under "
+            "OBBBA are the big recent driver), elective payment and credit "
+            "transfer (Sections 6417/6418) mechanics and registration-number "
+            "requirements, ordering and carryback/carryforward rule changes, "
+            "and passive-activity credit interactions."
+        ),
+    },
+    {
+        "id": "federal-8990",
+        "name": "Federal — Form 8990",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 8990 (Limitation on Business Interest Expense Under Section 163(j))"],
+        "instructions_current": "https://www.irs.gov/instructions/i8990",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i8990--{year}.pdf",
+        "notes": (
+            "Section 163(j) limitation. Continuous-use form — compare "
+            "revision dates. Watch: the ATI computation lines (EBITDA base "
+            "restored for tax years beginning after 2024 under OBBBA), "
+            "small-business exemption gross-receipts threshold indexing, "
+            "excepted-trade election mechanics, partnership excess items "
+            "(Schedules A/B), and CFC group election reporting."
+        ),
+    },
+    {
+        "id": "federal-8991",
+        "name": "Federal — Form 8991",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 8991 (Tax on Base Erosion Payments of Taxpayers With Substantial Gross Receipts — BEAT)"],
+        "instructions_current": "https://www.irs.gov/instructions/i8991",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i8991--{year}.pdf",
+        "notes": (
+            "BEAT return. Watch: the BEAT rate (permanently set at 10.5% for "
+            "tax years beginning after 2025 under OBBBA, replacing the "
+            "scheduled 12.5% increase), base-erosion percentage thresholds, "
+            "treatment of credits in the BEAT computation, qualified "
+            "derivative payment reporting, and aggregate-group determination "
+            "rules."
+        ),
+    },
+    {
+        "id": "federal-8992",
+        "name": "Federal — Form 8992",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 8992 (U.S. Shareholder Calculation of Global Intangible Low-Taxed Income / Net CFC Tested Income)"],
+        "instructions_current": "https://www.irs.gov/instructions/i8992",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i8992--{year}.pdf",
+        "notes": (
+            "GILTI/NCTI shareholder computation. Watch: the OBBBA overhaul "
+            "for tax years beginning after 2025 — regime renamed net CFC "
+            "tested income (NCTI), QBAI/net deemed tangible income return "
+            "eliminated (expect Part I/II line removals), Schedule A "
+            "changes, and consolidated-group (Schedule B) mechanics. Also "
+            "watch tested-unit and high-tax exclusion regulation updates."
+        ),
+    },
+    {
+        "id": "federal-8993",
+        "name": "Federal — Form 8993",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 8993 (Section 250 Deduction for FDII/FDDEI and GILTI/NCTI)"],
+        "instructions_current": "https://www.irs.gov/instructions/i8993",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i8993--{year}.pdf",
+        "notes": (
+            "Section 250 deduction. Watch: OBBBA changes for tax years "
+            "beginning after 2025 — FDII becomes foreign-derived deduction "
+            "eligible income (FDDEI), deduction percentages reset (roughly "
+            "33.34% FDDEI / 40% NCTI), QBAI-based deemed tangible income "
+            "return removed from the computation — plus taxable-income "
+            "limitation mechanics and expense allocation rules."
+        ),
+    },
+    {
+        "id": "federal-5472",
+        "name": "Federal — Form 5472",
+        "kind": "federal",
+        "agency": "Internal Revenue Service",
+        "website": "https://www.irs.gov",
+        "forms": ["Form 5472 (Information Return of a 25% Foreign-Owned U.S. Corporation or a Foreign Corporation Engaged in a U.S. Trade or Business)"],
+        "instructions_current": "https://www.irs.gov/instructions/i5472",
+        "instructions_prior_pattern": "https://www.irs.gov/pub/irs-prior/i5472--{year}.pdf",
+        "notes": (
+            "Related-party transaction reporting for 25% foreign-owned U.S. "
+            "corporations and foreign-owned disregarded entities. Watch: "
+            "reportable-transaction category changes (Parts IV-VI), "
+            "attribution rule changes (Section 318/958 interactions, "
+            "including OBBBA's Section 958(b) changes), foreign-owned U.S. "
+            "DE filing mechanics, penalty amounts ($25,000 base), and "
+            "record-maintenance requirement changes."
+        ),
+    },
 ]
 
 # (code, name, agency, website, main corporate forms, regime notes)
@@ -303,12 +451,11 @@ LEGIS_FEDERAL = {
         "corporate income tax impact, plus major IRS implementation guidance "
         "(revenue procedures, notices) that changes how corporations comply "
         "with new law. Map every provision to the federal forms it touches "
-        "(1120, 5471, 8865, 8858, and their schedules)."
+        "(1120, 1120-PC, 5471, 5472, 8865, 8858, 1118, 3800, 8990-8993, and "
+        "their schedules)."
     ),
     # form-layer jurisdictions whose returns this legislation feeds into
-    "related_form_jurisdictions": [
-        "federal-1120", "federal-5471", "federal-8865", "federal-8858",
-    ],
+    "related_form_jurisdictions": [j["id"] for j in FEDERAL],
 }
 
 

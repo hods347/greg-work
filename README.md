@@ -27,6 +27,10 @@ operative bill language with the pre-amendment statute — with its citation
 and source links. The Legislation tab has a **Company view / Firm view**
 toggle that switches every summary to the chosen audience.
 
+## Architecture
+
+![Architecture diagram](docs/architecture.svg)
+
 ## How it works
 
 ```

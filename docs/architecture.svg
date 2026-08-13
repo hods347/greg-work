@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1180 1020" font-family="Segoe UI, system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <!-- canvas -->
+  <rect x="0" y="0" width="1180" height="1020" fill="#f6f5f1"/>
+
+  <!-- title -->
+  <text x="590" y="46" text-anchor="middle" font-size="24" font-weight="700" fill="#1e2430">Tax Form Changes Tracker — Architecture</text>
+  <text x="590" y="72" text-anchor="middle" font-size="13.5" fill="#6b7280">Two agent-driven tracking layers, one validated data pipeline, one interactive report</text>
+
+  <!-- ============ LANE BACKGROUNDS ============ -->
+  <rect x="45" y="96" width="530" height="452" rx="14" fill="#1f5f4e" opacity="0.06"/>
+  <rect x="605" y="96" width="530" height="452" rx="14" fill="#2b5d8a" opacity="0.06"/>
+
+  <text x="65" y="124" font-size="13" font-weight="700" letter-spacing="2" fill="#1f5f4e">ANNUAL · FORM-INSTRUCTION CHANGES</text>
+  <text x="625" y="124" font-size="13" font-weight="700" letter-spacing="2" fill="#2b5d8a">RECURRING · LEGISLATION MONITORING</text>
+
+  <!-- ============ SOURCES ROW ============ -->
+  <rect x="65" y="140" width="490" height="86" rx="10" fill="#ffffff" stroke="#d9d4c3"/>
+  <text x="80" y="163" font-size="12" font-weight="700" letter-spacing="1.5" fill="#6b7280">SOURCES</text>
+  <text x="80" y="185" font-size="13.5" fill="#1e2430">IRS.gov current + prior-year instructions &#183; state DOR</text>
+  <text x="80" y="205" font-size="13.5" fill="#1e2430">forms archives &#183; Wayback Machine fallback</text>
+
+  <rect x="625" y="140" width="490" height="86" rx="10" fill="#ffffff" stroke="#d9d4c3"/>
+  <text x="640" y="163" font-size="12" font-weight="700" letter-spacing="1.5" fill="#6b7280">SOURCES</text>
+  <text x="640" y="185" font-size="13.5" fill="#1e2430">congress.gov &#183; state legislatures &#183; governor signings &#183;</text>
+  <text x="640" y="205" font-size="13.5" fill="#1e2430">DOR law-change bulletins &#183; enrolled bill text</text>
+
+  <line x1="310" y1="226" x2="310" y2="254" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="870" y1="226" x2="870" y2="254" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- ============ AGENTS ROW ============ -->
+  <rect x="65" y="258" width="490" height="158" rx="10" fill="#ffffff" stroke="#1f5f4e" stroke-width="1.6"/>
+  <text x="80" y="283" font-size="15" font-weight="700" fill="#1f5f4e">83 form-instruction agents &#8212; run once a year</text>
+  <text x="80" y="306" font-size="13" fill="#1e2430">31 federal forms &amp; schedules: 1120, 1120-PC, Schedules D/M-3/O/PH/UTP,</text>
+  <text x="80" y="324" font-size="13" fill="#1e2430">5471, 5472, 8865, 8858, 1118, 926, 8975, 3800, 8990&#8211;8993, 4626, 4562,</text>
+  <text x="80" y="342" font-size="13" fill="#1e2430">4797, 3115, 2220, 7004, 1125-A/E, 8886, 6765, 3468, 8936, 5884</text>
+  <text x="80" y="360" font-size="13" fill="#1e2430">52 states &amp; local: all 50 states + DC + New York City</text>
+  <!-- skill chips -->
+  <rect x="80" y="376" width="128" height="24" rx="12" fill="#eceae2"/>
+  <text x="144" y="392" text-anchor="middle" font-size="11.5" fill="#1e2430">fetch instructions</text>
+  <text x="219" y="392" font-size="12" fill="#6b7280">&#8594;</text>
+  <rect x="234" y="376" width="110" height="24" rx="12" fill="#eceae2"/>
+  <text x="289" y="392" text-anchor="middle" font-size="11.5" fill="#1e2430">diff two years</text>
+  <text x="355" y="392" font-size="12" fill="#6b7280">&#8594;</text>
+  <rect x="370" y="376" width="170" height="24" rx="12" fill="#eceae2"/>
+  <text x="455" y="392" text-anchor="middle" font-size="11.5" fill="#1e2430">summarize + cite verbatim</text>
+
+  <rect x="625" y="258" width="490" height="158" rx="10" fill="#ffffff" stroke="#2b5d8a" stroke-width="1.6"/>
+  <text x="640" y="283" font-size="15" font-weight="700" fill="#2b5d8a">53 legislation monitors &#8212; run monthly / quarterly</text>
+  <text x="640" y="306" font-size="13" fill="#1e2430">legis-federal (one Congress covers the whole federal suite)</text>
+  <text x="640" y="324" font-size="13" fill="#1e2430">legis-al &#8230; legis-wy + DC + NYC (52 state &amp; local monitors)</text>
+  <text x="640" y="342" font-size="13" fill="#1e2430">Rolling windows: each run picks up where the last one ended,</text>
+  <text x="640" y="360" font-size="13" fill="#1e2430">so frequent sweeps only search the gap</text>
+  <!-- skill chips -->
+  <rect x="640" y="376" width="150" height="24" rx="12" fill="#e4ebf2"/>
+  <text x="715" y="392" text-anchor="middle" font-size="11.5" fill="#1e2430">find enacted laws</text>
+  <text x="801" y="392" font-size="12" fill="#6b7280">&#8594;</text>
+  <rect x="816" y="376" width="150" height="24" rx="12" fill="#e4ebf2"/>
+  <text x="891" y="392" text-anchor="middle" font-size="11.5" fill="#1e2430">verify vs bill text</text>
+  <text x="977" y="392" font-size="12" fill="#6b7280">&#8594;</text>
+  <rect x="992" y="376" width="108" height="24" rx="12" fill="#e4ebf2"/>
+  <text x="1046" y="392" text-anchor="middle" font-size="11.5" fill="#1e2430">2 summaries</text>
+
+  <line x1="310" y1="416" x2="310" y2="444" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="870" y1="416" x2="870" y2="444" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- ============ DATA ROW ============ -->
+  <rect x="65" y="448" width="490" height="84" rx="10" fill="#ffffff" stroke="#d9d4c3"/>
+  <text x="80" y="471" font-size="13" font-weight="700" fill="#1e2430" font-family="Consolas, monospace">data/changes/&lt;jurisdiction&gt;.json</text>
+  <text x="80" y="492" font-size="12.5" fill="#6b7280">One file per jurisdiction: each change has an AI summary, category,</text>
+  <text x="80" y="510" font-size="12.5" fill="#6b7280">impact, and the verbatim instruction passage with its citation</text>
+
+  <rect x="625" y="448" width="490" height="84" rx="10" fill="#ffffff" stroke="#d9d4c3"/>
+  <text x="640" y="471" font-size="13" font-weight="700" fill="#1e2430" font-family="Consolas, monospace">data/legislation/&lt;legis-id&gt;.json</text>
+  <text x="640" y="492" font-size="12.5" fill="#6b7280">Each law: company summary + firm summary, operative bill language,</text>
+  <text x="640" y="510" font-size="12.5" fill="#6b7280">affected returns, first return year affected</text>
+
+  <!-- converge into quality gate -->
+  <path d="M 310 532 L 310 560 L 560 560 L 560 576" fill="none" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <path d="M 870 532 L 870 560 L 620 560 L 620 576" fill="none" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- ============ QUALITY GATE ============ -->
+  <rect x="330" y="580" width="520" height="78" rx="10" fill="#ffffff" stroke="#b26a00" stroke-width="1.6"/>
+  <text x="590" y="605" text-anchor="middle" font-size="14.5" font-weight="700" fill="#b26a00">Quality gate &#8212; schemas + validate_changes.py</text>
+  <text x="590" y="626" text-anchor="middle" font-size="12.5" fill="#1e2430">Verbatim excerpt required on every entry &#183; fixed category taxonomy &#183; impact rating</text>
+  <text x="590" y="644" text-anchor="middle" font-size="12.5" fill="#1e2430">&#8220;verified&#8221; only if the passage was copied from a document retrieved that run</text>
+
+  <!-- side panels -->
+  <rect x="50" y="580" width="252" height="146" rx="10" fill="#ffffff" stroke="#d9d4c3" stroke-dasharray="none"/>
+  <text x="65" y="603" font-size="12" font-weight="700" letter-spacing="1.5" fill="#6b7280">HOW IT&#8217;S BUILT</text>
+  <text x="65" y="625" font-size="12.5" fill="#1e2430">One registry (jurisdictions.py) is the</text>
+  <text x="65" y="643" font-size="12.5" fill="#1e2430">single source of truth. gen_agents.py</text>
+  <text x="65" y="661" font-size="12.5" fill="#1e2430">generates all 136 agents from it.</text>
+  <text x="65" y="683" font-size="12.5" fill="#6b7280">Adding a jurisdiction or form =</text>
+  <text x="65" y="701" font-size="12.5" fill="#6b7280">one registry entry + regenerate.</text>
+
+  <rect x="878" y="580" width="252" height="146" rx="10" fill="#ffffff" stroke="#d9d4c3"/>
+  <text x="893" y="603" font-size="12" font-weight="700" letter-spacing="1.5" fill="#6b7280">HOW IT&#8217;S RUN</text>
+  <text x="893" y="625" font-size="12.5" fill="#1e2430">/review-all-jurisdictions</text>
+  <text x="893" y="643" font-size="12.5" fill="#6b7280">annual sweep, agents in parallel</text>
+  <text x="893" y="667" font-size="12.5" fill="#1e2430">/track-legislation</text>
+  <text x="893" y="685" font-size="12.5" fill="#6b7280">monthly/quarterly + after budget</text>
+  <text x="893" y="703" font-size="12.5" fill="#6b7280">seasons and major federal acts</text>
+
+  <line x1="590" y1="658" x2="590" y2="686" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <text x="605" y="678" font-size="12" fill="#6b7280" font-family="Consolas, monospace">generate_report.py</text>
+
+  <!-- ============ REPORT ============ -->
+  <rect x="330" y="690" width="520" height="212" rx="12" fill="#1f5f4e"/>
+  <text x="590" y="718" text-anchor="middle" font-size="15.5" font-weight="700" fill="#ffffff">report/index.html &#8212; self-contained interactive page</text>
+  <!-- tab boxes -->
+  <rect x="348" y="734" width="238" height="106" rx="8" fill="#ffffff" opacity="0.95"/>
+  <text x="362" y="757" font-size="13" font-weight="700" fill="#1f5f4e">Form instructions tab</text>
+  <text x="362" y="777" font-size="11.5" fill="#1e2430">Year-over-year changes by</text>
+  <text x="362" y="794" font-size="11.5" fill="#1e2430">jurisdiction, filtered by category,</text>
+  <text x="362" y="811" font-size="11.5" fill="#1e2430">impact, free-text search, and a</text>
+  <text x="362" y="828" font-size="11.5" fill="#1e2430">verified-only toggle</text>
+  <rect x="594" y="734" width="238" height="106" rx="8" fill="#ffffff" opacity="0.95"/>
+  <text x="608" y="757" font-size="13" font-weight="700" fill="#2b5d8a">Legislation tab</text>
+  <text x="608" y="777" font-size="11.5" fill="#1e2430">New laws with a Company view /</text>
+  <text x="608" y="794" font-size="11.5" fill="#1e2430">Firm view toggle that rewrites</text>
+  <text x="608" y="811" font-size="11.5" fill="#1e2430">every summary for the chosen</text>
+  <text x="608" y="828" font-size="11.5" fill="#1e2430">audience</text>
+  <text x="590" y="864" text-anchor="middle" font-size="12.5" fill="#ffffff">Click any entry &#8594; pop-out preview of the verbatim source passage,</text>
+  <text x="590" y="883" text-anchor="middle" font-size="12.5" fill="#ffffff">prior-year / pre-amendment text, citation, and source link</text>
+
+  <!-- ============ FUTURE ============ -->
+  <line x1="590" y1="902" x2="590" y2="928" stroke="#6b7280" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrow)"/>
+  <rect x="240" y="932" width="700" height="76" rx="12" fill="none" stroke="#6b7280" stroke-width="1.6" stroke-dasharray="7 5"/>
+  <text x="590" y="960" text-anchor="middle" font-size="14" font-weight="700" fill="#6b7280">Planned: return-data comparison</text>
+  <text x="590" y="982" text-anchor="middle" font-size="12.5" fill="#6b7280">Join tracked changes against tax return preparation data via affected_returns + first_return_year_affected</text>
+  <text x="590" y="1000" text-anchor="middle" font-size="12.5" fill="#6b7280">to see which entities and clients are actually exposed to each change</text>
+</svg>
